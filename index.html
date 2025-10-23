@@ -149,6 +149,25 @@
         .nav-info { display: flex; align-items: center; gap: 1rem; }
         #roleDisplay { font-size: 0.875rem; font-weight: 500; color: #4b5563; background-color: #f3f4f6; padding: 0.25rem 0.75rem; border-radius: 9999px; text-transform: capitalize; }
         
+        /* New Location Block Style */
+        #locationBlock {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #4b5563;
+            padding: 0.25rem 0.75rem;
+            border: 1px solid #d1fae5;
+            border-radius: 9999px;
+            background-color: #f0fff4;
+            cursor: pointer;
+            transition: background-color 0.15s;
+        }
+        #locationBlock:hover {
+            background-color: #ecfdf5;
+        }
+
         /* Sign Out Button Style */
         .signout-btn {
             background-color: #ef4444; /* Red */
@@ -178,7 +197,7 @@
         .hero-buttons button { border: none; font-weight: 700; padding: 0.75rem 2rem; border-radius: 9999px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: background-color 0.3s, transform 0.3s; cursor: pointer; width: 100%; }
         .shop-btn { background-color: #facc15; color: #064e3b; }
         .shop-btn:hover { background-color: #eab308; transform: scale(1.05); }
-        .recipe-btn { background-color: var(--color-secondary); color: white; } /* Keep recipe style for layout, but remove button */
+        .recipe-btn { background-color: var(--color-secondary); color: white; } /* Keep style for layout, but remove button */
         .recipe-btn:hover { background-color: #7c3aed; transform: scale(1.05); }
         @media (min-width: 640px) { .hero-section h1 { font-size: 3.75rem; } .hero-buttons { flex-direction: row; gap: 1rem; } .hero-buttons button { width: auto; } }
         
@@ -224,6 +243,39 @@
         .modal-btn { width: 100%; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; color: white; transition: background-color 0.15s; }
         .modal-btn.success { background-color: var(--color-primary-dark); }
         .modal-btn.llm-close { background-color: var(--color-secondary); }
+
+        /* Location Modal Specific Styles */
+        #locationModalContent { max-width: 400px; }
+        #locationModalContent .option-card {
+            border: 1px solid #d1fae5;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.15s;
+        }
+        #locationModalContent .option-card:hover {
+            background-color: #f0fff4;
+        }
+        #manualLocationInput {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1fae5;
+            border-radius: 0.5rem;
+            box-sizing: border-box;
+            margin-top: 0.5rem;
+        }
+        .set-location-btn {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+
 
         /* 9. Farmer View */
         #farmerView { padding: 2rem 1rem; min-height: 80vh; background-color: #f0fff4; }
@@ -320,6 +372,13 @@
                 </div>
                 
                 <div class="nav-info">
+                    
+                    <!-- Location Block - Now triggers the modal -->
+                    <div id="locationBlock" onclick="showLocationModal()" title="Click to select location">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M12 18s-4-6-4-8a4 4 0 0 1 8 0c0 2-4 8-4 8z"/><circle cx="12" cy="10" r="1"/></svg>
+                        <span id="locationText">Detecting Location...</span>
+                    </div>
+
                     <div id="roleDisplay">Role: Customer</div>
                     
                     <!-- Customer Links -->
@@ -353,6 +412,31 @@
                 <button onclick="closeMessage()" class="modal-btn success">
                     Close
                 </button>
+            </div>
+        </div>
+
+        <!-- NEW: Location Selection Modal -->
+        <div id="locationModal" class="modal-backdrop">
+            <div class="modal-content" id="locationModalContent">
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Select Your Location</h3>
+                <p style="color: #4b5563; margin-bottom: 1.5rem;">Choose how you want to set your delivery area.</p>
+
+                <!-- Option 1: Automatic Detection -->
+                <div class="option-card" onclick="autoDetectLocation()">
+                    <p style="font-weight: 700; color: #2563eb;">📍 Auto-Detect My Location</p>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem;">Use your device's GPS for precise location finding.</p>
+                </div>
+
+                <p style="text-align: center; margin: 1rem 0; font-weight: 600; color: #6b7280;">OR</p>
+
+                <!-- Option 2: Manual Input -->
+                <form onsubmit="event.preventDefault(); manualSetLocation(document.getElementById('manualLocationInput').value);">
+                    <label for="manualLocationInput" style="font-weight: 700; color: var(--color-primary-dark);">Manually Enter City/Area Name:</label>
+                    <input type="text" id="manualLocationInput" placeholder="e.g., Tirupati, Hyderabad" required>
+                    <button type="submit" class="set-location-btn">Set Location</button>
+                </form>
+
+                <button onclick="closeLocationModal()" class="modal-btn" style="background-color: #9ca3af; margin-top: 1rem;">Cancel</button>
             </div>
         </div>
 
@@ -591,6 +675,9 @@
         let rawProducts = []; 
         let farmerListings = []; 
         let orders = []; 
+        // New State for Location
+        let userLocation = { city: 'Unknown', coords: null };
+
 
         // NOTE: The code below is modified to allow easy local configuration.
         const isHostedEnvironment = typeof __firebase_config !== 'undefined' && __firebase_config.length > 2;
@@ -668,6 +755,9 @@
         // New DOM elements for navigation added below in the script for correct targeting
         const ordersButton = document.getElementById('ordersButton');
         const cartContainer = document.getElementById('cartContainer');
+        const locationText = document.getElementById('locationText');
+        const locationModal = document.getElementById('locationModal');
+        const manualLocationInput = document.getElementById('manualLocationInput');
 
 
         // --- Initialization and View Logic ---
@@ -692,6 +782,10 @@
                 currentUserId = 'local-mock-' + Math.random().toString(36).substring(2, 9);
                 renderLoginView(false); 
             }
+            
+            // Start location detection regardless of auth/db status
+            // Now just initializes the default text, prompt is done on click
+            locationText.textContent = 'Select Location';
         }
 
         async function authenticateUser() {
@@ -833,9 +927,130 @@
         }
 
 
+        // --- GEOLOCATION LOGIC (NEW) ---
+        // NOTE: This uses a mock API key. Replace with a real key for live service.
+        const OPENCAGE_API_KEY = "46eaeb0df34a4ef6ac4ed5eae238a0d9"; 
+
+        async function reverseGeocode(lat, lon) {
+            const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${OPENCAGE_API_KEY}`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.results && data.results.length > 0) {
+                    // Extract the city/town name from the components
+                    const components = data.results[0].components;
+                    const city = components.city || components.town || components.village || components.county || components.state_district || 'Area';
+                    return city;
+                }
+                return 'Unknown Area';
+            } catch (error) {
+                console.error("Reverse Geocoding failed:", error);
+                return 'Network Error';
+            }
+        }
+
+        function handleGeolocationSuccess(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            
+            userLocation.coords = { lat, lon };
+            locationText.textContent = 'Fetching Area...';
+
+            closeLocationModal();
+            
+            if (OPENCAGE_API_KEY === "YOUR_OPENCAGE_API_KEY") {
+                 // Mock behavior if API key is not set
+                 userLocation.city = 'Local Demo Area';
+                 locationText.textContent = userLocation.city;
+                 return;
+            }
+
+            reverseGeocode(lat, lon).then(city => {
+                userLocation.city = city;
+                locationText.textContent = city;
+                showMessage(`Location set to ${city} via Auto-Detect.`, 'success');
+            }).catch(() => {
+                userLocation.city = 'Area Found';
+                locationText.textContent = 'Area Found';
+                showMessage(`Location set to generic area. Geocoding failed.`, 'error');
+            });
+        }
+
+        function handleGeolocationError(error) {
+            console.warn('Geolocation Error:', error.code, error.message);
+            closeLocationModal();
+            userLocation.city = 'Location Disabled';
+            locationText.textContent = 'Location Disabled';
+            showMessage('Please enable location services and try again.', 'error');
+        }
+
+        function showLocationModal() {
+            locationModal.style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('locationModalContent').style.transform = 'scale(1)';
+                document.getElementById('locationModalContent').style.opacity = '1';
+            }, 50);
+        }
+
+        function closeLocationModal() {
+            document.getElementById('locationModalContent').style.transform = 'scale(0.95)';
+            document.getElementById('locationModalContent').style.opacity = '0';
+            setTimeout(() => { locationModal.style.display = 'none'; }, 300);
+        }
+        
+        function manualSetLocation(cityName) {
+            if (!cityName || cityName.trim() === '') {
+                showMessage('Please enter a valid city or area name.', 'error');
+                return;
+            }
+            userLocation.city = cityName.trim();
+            locationText.textContent = cityName.trim();
+            
+            closeLocationModal();
+            showMessage(`Location manually set to ${cityName.trim()}.`, 'success');
+            
+            // Optional: Re-run product filtering if it was location-based
+            filterAndSortProducts(); 
+        }
+
+        // Renamed getLocation to autoDetectLocation for clarity
+        function autoDetectLocation() {
+             if (navigator.geolocation) {
+                locationText.textContent = 'Detecting...';
+                // This call triggers the browser's permission prompt.
+                navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError, {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+                });
+            } else {
+                closeLocationModal();
+                userLocation.city = 'Geo Not Supported';
+                locationText.textContent = 'Geo Not Supported';
+                showMessage('Your browser does not support Geolocation.', 'error');
+            }
+        }
+
+
         // --- CUSTOMER LOGIC: REAL-TIME DATA LISTENER & FILTERING ---
+        // Debounce utility function
+        function debounce(func, delay) {
+            let timeoutId;
+            return function(...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
+
+        const debouncedFilterAndSort = debounce(filterAndSortProducts, 200); // 200ms delay
+
         function updatePriceValue(value) {
             priceRangeValueDisplay.textContent = `₹${value}`;
+            // Changed input handler to call the debounced function
+            debouncedFilterAndSort(); 
         }
         
         function filterAndSortProducts() {
@@ -900,8 +1115,8 @@
                 maxPrice = Math.ceil(maxPrice / 10) * 10;
                 priceRangeInput.max = maxPrice > 0 ? maxPrice : 250;
                 if (priceRangeInput.value > maxPrice) { priceRangeInput.value = maxPrice; }
-                updatePriceValue(priceRangeInput.value);
-
+                
+                // Only call filter and sort ONCE when data updates to prevent thrashing
                 filterAndSortProducts();
                 console.log(`[Firestore] Updated product list. Total items: ${rawProducts.length}`);
 
@@ -1205,8 +1420,6 @@
             llmModal.style.display = 'flex';
             llmModalTitle.innerHTML = `<span style="margin-right: 0.5rem;">✨</span> ${title}`;
             
-            if (isLoading) { llmOutput.innerHTML = llmLoading.outerHTML; }
-            
             setTimeout(() => {
                 document.getElementById('llmContent').style.transform = 'scale(1)';
                 document.getElementById('llmContent').style.opacity = '1';
@@ -1354,6 +1567,10 @@
         window.checkout = checkout; 
         window.createProductCardHTML = createProductCardHTML; 
         window.signOutUser = signOutUser; 
+        window.showLocationModal = showLocationModal; // FIX: Added missing function
+        window.autoDetectLocation = autoDetectLocation;
+        window.manualSetLocation = manualSetLocation;
+        window.closeLocationModal = closeLocationModal;
 
         // --- Initialization on Load ---
         window.onload = initApp;
@@ -1361,3 +1578,4 @@
 
 </body>
 </html>
+
