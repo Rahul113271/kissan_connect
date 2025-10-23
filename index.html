@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KisanConnect - Your Local RaituBazar</title>
+    
+    <style>
+        /* 1. Base Styles & Global Utilities */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        :root {
+            --color-primary: #10b981; /* Green */
+            --color-primary-dark: #059669; /* Darker Green */
+            --color-secondary: #8b5cf6; /* Purple */
+            --color-background: #f8fafc; 
+            --color-text-dark: #1f2937;
+        }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--color-background); 
+            color: var(--color-text-dark); 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.5; 
+        }
+        .container { 
+            max-width: 1280px; 
+            margin: 0 auto; 
+            padding: 0 1rem; 
+        }
+        .flex-col-center { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+        }
+
+        /* 2. Loading Indicator */
+        #loadingIndicator { position: fixed; inset: 0; background-color: #f9f9f9; display: flex; align-items: center; justify-content: center; z-index: 1000; transition: opacity 0.5s; }
+        .spinner { animation: spin 1s linear infinite; border-radius: 50%; height: 48px; width: 48px; border-bottom: 2px solid var(--color-primary-dark); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* 3. LOGIN VIEW (Home Page) */
+        #loginView { 
+            min-height: 100vh; 
+            background-color: #ecfdf5; /* Light Green Background */
+            display: none; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; /* Center content vertically */
+            padding: 2rem 1rem; 
+        }
+        
+        .login-card {
+            background-color: white;
+            padding: 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1000px; /* Wider card */
+            text-align: center;
+        }
+
+        .login-card h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--color-primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .role-grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            /* Changed from 3fr to 2fr layout */
+            grid-template-columns: repeat(1, 1fr); 
+        }
+
+        @media (min-width: 768px) {
+            /* 2 column layout on tablet/desktop */
+            .role-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        /* Style adjustments for a 2-column grid */
+        .role-card {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 2px solid #e5e7eb;
+            background-color: #f9fafb;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+        }
+        .role-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.15);
+            background-color: white;
+        }
+        .role-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+        .role-card span {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: white;
+            border: none;
+        }
+        .role-card .icon {
+             font-size: 3rem; 
+             margin-bottom: 0.5rem;
+        }
+
+        /* Role Button Specific Colors */
+        .customer-card h3 { color: #2563eb; } 
+        .customer-card span { background-color: #2563eb; }
+        .customer-card .icon { color: #2563eb; }
+
+        .farmer-card h3 { color: var(--color-primary-dark); } 
+        .farmer-card span { background-color: var(--color-primary-dark); }
+        .farmer-card .icon { color: var(--color-primary-dark); }
+        
+        /* NOTE: Admin Card styles kept but unused in HTML */
+        .admin-card h3 { color: #dc2626; } 
+        .admin-card span { background-color: #dc2626; }
+        .admin-card .icon { color: #dc2626; }
+
+        #authStatus {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px dashed #d1d5db;
+        }
+
+
+        /* 4. Main Application Layout */
+        #mainApp { display: none; }
+        header { background-color: white; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 50; }
+        header nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+        .logo { font-size: 1.875rem; font-weight: 800; color: var(--color-primary-dark); }
+        .nav-info { display: flex; align-items: center; gap: 1rem; }
+        #roleDisplay { font-size: 0.875rem; font-weight: 500; color: #4b5563; background-color: #f3f4f6; padding: 0.25rem 0.75rem; border-radius: 9999px; text-transform: capitalize; }
+        
+        /* Sign Out Button Style */
+        .signout-btn {
+            background-color: #ef4444; /* Red */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.15s;
+        }
+        .signout-btn:hover {
+            background-color: #dc2626;
+        }
+        
+        .nav-link { padding: 0.5rem 0.75rem; border-radius: 9999px; font-weight: 600; color: #4b5563; cursor: pointer; transition: background-color 0.15s, color 0.15s; display: flex; align-items: center; gap: 0.4rem; border: none; background: none;}
+        .nav-link:hover { background-color: #f3f4f6; color: var(--color-primary-dark); }
+        #cartButton { padding: 0.5rem; background-color: #d1fae5; color: var(--color-primary-dark); border-radius: 9999px; transition: background-color 0.15s; position: relative; border: none; cursor: pointer; }
+        #cartButton:hover { background-color: #a7f3d0; }
+        #cartCounter { position: absolute; top: -4px; right: -4px; background-color: #ef4444; color: white; font-size: 0.75rem; font-weight: 700; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+
+        /* 5. Customer Market Hero */
+        .hero-section { background-color: var(--color-primary-dark); color: white; padding: 5rem 0; text-align: center; }
+        .hero-section h1 { font-size: 3rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.05em; }
+        .hero-section p { font-size: 1.25rem; font-weight: 300; margin-bottom: 2rem; max-width: 48rem; margin: 0 auto 2rem auto; }
+        .hero-buttons { display: flex; flex-direction: column; justify-content: center; gap: 1rem; }
+        .hero-buttons button { border: none; font-weight: 700; padding: 0.75rem 2rem; border-radius: 9999px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: background-color 0.3s, transform 0.3s; cursor: pointer; width: 100%; }
+        .shop-btn { background-color: #facc15; color: #064e3b; }
+        .shop-btn:hover { background-color: #eab308; transform: scale(1.05); }
+        .recipe-btn { background-color: var(--color-secondary); color: white; } /* Keep recipe style for layout, but remove button */
+        .recipe-btn:hover { background-color: #7c3aed; transform: scale(1.05); }
+        @media (min-width: 640px) { .hero-section h1 { font-size: 3.75rem; } .hero-buttons { flex-direction: row; gap: 1rem; } .hero-buttons button { width: auto; } }
+        
+        /* 6. Product Grid & Filter */
+        #products { padding: 4rem 0; background-color: white; }
+        #products h2 { font-size: 2.25rem; font-weight: 700; text-align: center; color: var(--color-text-dark); margin-bottom: 3rem; }
+        #filterBar { display: flex; flex-direction: column; gap: 1.5rem; padding: 1.5rem 1rem; margin-bottom: 2rem; background-color: #f0fff4; border-radius: 0.75rem; border: 1px solid #d1fae5; }
+        #filterBar .filter-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        #filterBar label { font-weight: 600; color: var(--color-primary-dark); }
+        #filterBar input[type="range"], #filterBar select { width: 100%; padding: 0.5rem; border: 1px solid #d1fae5; border-radius: 0.5rem; box-sizing: border-box; background-color: white; }
+        #priceRangeValue { font-weight: 700; color: #ef4444; }
+        @media (min-width: 768px) { #filterBar { flex-direction: row; justify-content: space-between; align-items: center; gap: 2rem; } #filterBar .filter-group { flex-direction: row; align-items: center; gap: 1rem; } #filterBar input[type="range"], #filterBar select { width: auto; min-width: 150px; } }
+        #productGrid { display: grid; gap: 2rem; grid-template-columns: repeat(1, 1fr); }
+        @media (min-width: 640px) { #productGrid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { #productGrid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1280px) { #productGrid { grid-template-columns: repeat(4, 1fr); } }
+
+        /* Product Card */
+        .product-card { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); overflow: hidden; border: 1px solid #f3f4f6; transition: box-shadow 0.3s; }
+        .product-card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .product-card img { width: 100%; height: 12rem; object-fit: cover; object-position: center; }
+        .card-content { padding: 1.25rem; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+        .card-header h3 { font-size: 1.25rem; font-weight: 700; color: #1f2937; }
+        .freshness-tag { font-size: 0.75rem; font-weight: 600; color: var(--color-primary-dark); background-color: #ecfdf5; padding: 0.25rem 0.75rem; border-radius: 9999px; white-space: nowrap; }
+        .price-tag { font-size: 1.5rem; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 0.5rem; }
+        .price-tag .unit { font-size: 0.875rem; font-weight: 400; color: #6b7280; }
+        .seller-info { font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem; }
+        .add-to-cart-btn { width: 100%; background-color: var(--color-primary-dark); color: white; padding: 0.75rem; border-radius: 0.75rem; border: none; font-weight: 600; font-size: 1.125rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); cursor: pointer; }
+        .add-to-cart-btn:hover { background-color: #047857; transform: scale(1.01); }
+        .optimize-btn.check-freshness { background-color: #2563eb; color: white; margin-bottom: 0.5rem; width: 100%; } /* Keep style for layout, but remove button */
+
+        /* 7. Footer */
+        footer { background-color: #1f2937; color: white; padding: 2.5rem 0; margin-top: 4rem; text-align: center; }
+        footer p { color: #9ca3af; margin-bottom: 1rem; }
+        footer a { color: #9ca3af; text-decoration: none; transition: color 0.15s; margin: 0 0.75rem; }
+        footer a:hover { color: #34d399; }
+
+        /* 8. Modals */
+        .modal-backdrop { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 50; }
+        .modal-content { background-color: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); max-width: 24rem; width: 90%; transform: scale(0.95); opacity: 0; transition: transform 0.3s, opacity 0.3s; }
+        /* Removed #llmModal CSS */
+        .modal-btn { width: 100%; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; color: white; transition: background-color 0.15s; }
+        .modal-btn.success { background-color: var(--color-primary-dark); }
+        .modal-btn.llm-close { background-color: var(--color-secondary); }
+
+        /* 9. Farmer View */
+        #farmerView { padding: 2rem 1rem; min-height: 80vh; background-color: #f0fff4; }
+        .farmer-form-card { background-color: white; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); max-width: 600px; margin: 2rem auto 4rem auto; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 0.25rem; color: #059669; }
+        .form-group input, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid #d1fae5; border-radius: 0.5rem; box-sizing: border-box; }
+        .submit-btn { width: 100%; background-color: #facc15; color: #064e3b; font-weight: 700; padding: 0.75rem; border-radius: 9999px; border: none; cursor: pointer; margin-top: 1.5rem; }
+        #myListingsContainer { display: grid; gap: 1.5rem; grid-template-columns: repeat(1, 1fr); margin-top: 2rem; }
+        @media (min-width: 640px) { #myListingsContainer { grid-template-columns: repeat(2, 1fr); } }
+        .listing-card { background-color: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border: 1px solid #d1fae5; display: flex; flex-direction: column; justify-content: space-between; }
+        .listing-card h4 { font-size: 1.125rem; font-weight: 700; color: #1f2937; margin-bottom: 0.5rem; }
+        .delete-btn { background-color: #ef4444; color: white; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+        .optimize-btn { background-color: #facc15; color: #064e3b; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; margin-top: 0.5rem; }
+
+        /* 10. Cart View */
+        #cartPage { padding: 4rem 1rem; min-height: 80vh; background-color: white; display: none; }
+        #cartPage h2 { font-size: 2.25rem; font-weight: 700; color: var(--color-text-dark); margin-bottom: 2rem; }
+        .cart-layout { display: flex; flex-direction: column; gap: 2rem; }
+        @media (min-width: 1024px) { .cart-layout { flex-direction: row; align-items: flex-start; } .cart-summary { width: 350px; min-width: 300px; } }
+        #cartItemsList { flex-grow: 1; }
+        .cart-item { display: grid; grid-template-columns: 1fr 2fr 1fr 0.5fr; align-items: center; border-bottom: 1px solid #e5e7eb; padding: 1rem 0; }
+        .cart-item:last-child { border-bottom: none; }
+        .item-details { display: flex; align-items: center; gap: 1rem; }
+        .item-details img { width: 60px; height: 60px; object-fit: cover; border-radius: 0.5rem; }
+        .remove-btn { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.5rem; }
+        .cart-summary { background-color: #f9f9f9; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); width: 100%; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px dashed #e5e7eb; font-size: 1rem; }
+        .summary-row:last-of-type { border-bottom: none; margin-top: 1rem; padding-top: 1rem; font-size: 1.25rem; font-weight: 700; color: var(--color-primary-dark); }
+        .checkout-btn { width: 100%; padding: 1rem; background-color: var(--color-secondary); color: white; border: none; border-radius: 0.5rem; font-weight: 700; cursor: pointer; margin-top: 1rem; }
+        .empty-cart-message { text-align: center; padding: 3rem; background-color: #f0fff4; border-radius: 0.75rem; border: 1px dashed #d1fae5; color: #059669; font-size: 1.125rem; font-weight: 500; }
+
+        /* 11. Orders Page */
+        #ordersPage { padding: 4rem 1rem; min-height: 80vh; background-color: var(--color-background); display: none; }
+        #ordersPage h2 { font-size: 2.25rem; font-weight: 700; color: var(--color-text-dark); text-align: center; margin-bottom: 2rem; }
+        .orders-header { max-width: 900px; margin: 0 auto 2rem auto; display: flex; justify-content: space-between; align-items: center; }
+        .back-button { background: none; border: 1px solid #ccc; color: #4b5563; padding: 0.5rem 1rem; border-radius: 9999px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; }
+        #ordersList { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
+        .order-card { background-color: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e5e7eb; }
+        .order-header-card { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #d1fae5; padding-bottom: 0.75rem; margin-bottom: 0.75rem; }
+        .order-id { font-size: 1rem; font-weight: 500; color: #6b7280; }
+        .order-status { font-weight: 700; font-size: 1.125rem; color: var(--color-primary-dark); }
+        .order-details-summary { display: flex; justify-content: space-between; margin-top: 0.5rem; }
+        .order-total { font-size: 1.25rem; font-weight: 800; color: #ef4444; }
+        .order-delivery { font-size: 0.875rem; font-weight: 600; color: #4b5563; }
+        .order-item-list { margin-top: 1rem; padding: 0.5rem 0; border-top: 1px dashed #f3f4f6; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Global Loading Indicator -->
+    <div id="loadingIndicator">
+        <div class="flex-col-center">
+            <div class="spinner"></div>
+            <p style="margin-top: 1rem; font-size: 1.125rem; color: #059669; font-weight: 600;">Connecting to KisanConnect...</p>
+        </div>
+    </div>
+
+    <!-- 1. LOGIN VIEW (Role Selection) -->
+    <section id="loginView" class="login-page">
+        <div class="login-card">
+            <h1>Welcome to KisanConnect</h1>
+            <p style="font-size: 1.25rem; color: #4b5563; margin-bottom: 2.5rem;">Select your role to proceed to the RaituBazar interface.</p>
+            
+            <div class="role-grid">
+                
+                <button onclick="loginAs('customer')" class="role-card customer-card">
+                    <div class="icon">🛒</div>
+                    <h3>Customer</h3>
+                    <p style="color: #4b5563; margin-top: 0.5rem;">Browse fresh produce and place orders.</p>
+                    <span>Start Shopping</span>
+                </button>
+
+                <button onclick="loginAs('farmer')" class="role-card farmer-card">
+                    <div class="icon">🧑‍🌾</div>
+                    <h3>Farmer</h3>
+                    <p style="color: #4b5563; margin-top: 0.5rem;">Manage listings and view order history.</p>
+                    <span>Manage Farm</span>
+                </button>
+                
+                <!-- ADMIN ROLE REMOVED -->
+            </div>
+             <p id="authStatus" style="margin-top: 2rem; font-size: 0.875rem; color: #6b7280;">Authentication Ready (User ID: <span id="currentUserIdDisplay">Loading...</span>)</p>
+        </div>
+    </section>
+
+    <!-- 2. MAIN APPLICATION CONTAINER -->
+    <main id="mainApp">
+        <!-- Navigation Bar -->
+        <header>
+            <nav class="container">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span class="logo">KisanConnect</span>
+                </div>
+                
+                <div class="nav-info">
+                    <div id="roleDisplay">Role: Customer</div>
+                    
+                    <!-- Customer Links -->
+                    <button onclick="toggleCustomerView('orders')" class="nav-link" id="ordersButton" style="display: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history"><path d="M3 3v5h5"/><path d="M3.014 11a9 9 0 1 0 5.98-5.748"/><path d="M12 7v5l4 2"/></svg>
+                        Orders
+                    </button>
+                    
+                    <div style="position: relative; display: none;" id="cartContainer">
+                        <button id="cartButton" onclick="toggleCustomerView('cart')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart">
+                                <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.15"/>
+                            </svg>
+                        </button>
+                        <span id="cartCounter">0</span>
+                    </div>
+                    
+                    <!-- Sign Out Button (Now always visible when mainApp is active) -->
+                    <button onclick="signOutUser()" class="signout-btn">
+                        Sign Out
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Success/Error Message Modal -->
+        <div id="messageBox" class="modal-backdrop">
+            <div class="modal-content" id="messageContent">
+                <h3 class="modal-title-success" style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;">Success!</h3>
+                <p id="messageText" style="color: #4b5563; margin-bottom: 1rem;">Item added to your basket.</p>
+                <button onclick="closeMessage()" class="modal-btn success">
+                    Close
+                </button>
+            </div>
+        </div>
+
+        <!-- Gemini LLM Modal (Kept for Farmer Optimization) -->
+        <div id="llmModal" class="modal-backdrop">
+            <div class="modal-content" id="llmContent" style="max-width: 512px; max-height: 90vh; overflow-y: auto; padding: 2rem 1.5rem;">
+                <h3 id="llmModalTitle" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center;">
+                    <span style="margin-right: 0.5rem;">✨</span> AI Insight
+                </h3>
+                <div id="llmOutput" style="color: #374151; line-height: 1.5;">
+                    <div style="display: flex; justify-content: center; align-items: center; height: 12rem;" id="llmLoading">
+                        <div class="spinner" style="border-color: #8b5cf6;"></div>
+                        <p style="margin-left: 1rem; color: #8b5cf6; font-weight: 600;">Generating AI analysis...</p>
+                    </div>
+                </div>
+                <button onclick="closeLLMModal()" class="modal-btn llm-close" style="margin-top: 1.5rem;">
+                    Close
+                </button>
+            </div>
+        </div>
+
+        <!-- 2A. CUSTOMER VIEW CONTAINER -->
+        <div id="customerView" style="display: block;">
+            
+            <!-- MARKET PAGE -->
+            <div id="marketPage" style="display: block;">
+                <!-- Hero Section -->
+                <section class="hero-section">
+                    <div class="container">
+                        <h1>Directly from Our Farmers</h1>
+                        <p>
+                            Connecting you to the freshest, locally-sourced produce, straight from the raitubazar to your doorstep.
+                        </p>
+                        <div class="hero-buttons">
+                            <button onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})" class="shop-btn" style="width: auto; min-width: 250px;">
+                                Shop Fresh Produce
+                            </button>
+                            <!-- Generate Recipe Button Removed -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Product Grid Section -->
+                <section id="products">
+                    <div class="container">
+                        <h2>Today's Fresh Harvest</h2>
+                        
+                        <!-- New Filter and Sort Bar -->
+                        <div id="filterBar">
+                            <div class="filter-group">
+                                <label for="priceRange">Max Price (₹):</label>
+                                <input type="range" id="priceRange" min="10" max="250" value="250" step="10" oninput="updatePriceValue(this.value); filterAndSortProducts();">
+                                <span id="priceRangeValue">₹250</span>
+                            </div>
+
+                            <div class="filter-group">
+                                <label for="sortOrder">Sort By:</label>
+                                <select id="sortOrder" onchange="filterAndSortProducts()">
+                                    <option value="timestamp_desc">Freshness (Newest First)</option>
+                                    <option value="price_asc">Price (Low to High)</option>
+                                    <option value="price_desc">Price (High to Low)</option>
+                                    <option value="name_asc">Name (A-Z)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div id="productGrid" class="product-grid">
+                            <!-- Product Cards will be injected here by JavaScript -->
+                            <p style="text-align: center; color: #4b5563; grid-column: 1 / -1; padding-top: 3rem;" id="noProductsMessage">
+                                Loading products or no products found in the market...
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- CART PAGE -->
+            <div id="cartPage" style="display: none;">
+                <div class="container">
+                    <div class="orders-header">
+                        <button onclick="toggleCustomerView('market')" class="back-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                            Back to Market
+                        </button>
+                        <h2 style="margin: 0;">🛒 Your Shopping Basket</h2>
+                        <span></span>
+                    </div>
+
+                    <div class="cart-layout">
+                        <div id="cartItemsList">
+                            <p class="empty-cart-message">Your basket is currently empty. Start adding some fresh produce!</p>
+                        </div>
+                        
+                        <div class="cart-summary">
+                            <h3 style="font-size: 1.25rem; font-weight: 700; color: #1f2937; margin-bottom: 1rem;">Order Summary</h3>
+                            
+                            <div class="summary-row">
+                                <span>Subtotal:</span>
+                                <span id="cartSubtotal">₹0.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>GST (5%):</span>
+                                <span id="cartTax">₹0.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Total:</span>
+                                <span id="cartGrandTotal">₹0.00</span>
+                            </div>
+                            
+                            <button onclick="checkout()" class="checkout-btn" id="checkoutBtn">
+                                Proceed to Checkout
+                            </button>
+                            <button onclick="toggleCustomerView('market')" class="modal-btn success" style="margin-top: 0.5rem;">
+                                Continue Shopping
+                            </button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW: ORDERS PAGE -->
+            <div id="ordersPage" style="display: none;">
+                <div class="container">
+                    <div class="orders-header">
+                        <button onclick="toggleCustomerView('market')" class="back-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                            Back to Market
+                        </button>
+                        <h2 style="margin: 0;">📦 My Order History</h2>
+                        <span></span>
+                    </div>
+                    <div id="ordersList">
+                        <p style="text-align: center; color: #4b5563; padding: 3rem;" id="noOrdersMessage">
+                            You haven't placed any orders yet. Start shopping!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 2B. FARMER VIEW (Product Selling Interface) -->
+        <div id="farmerView" style="display: none;">
+            <div class="container">
+                <h2 style="font-size: 2.25rem; font-weight: 700; text-align: center; color: var(--color-primary-dark); padding-top: 2rem; margin-bottom: 1rem;">
+                    🧑‍🌾 Manage Your Farm Listings
+                </h2>
+                <p style="text-align: center; color: #4b5563; margin-bottom: 2rem;">Use this form to add a new product to the RaituBazar.</p>
+
+                <div class="farmer-form-card">
+                    <form id="addProductForm" onsubmit="event.preventDefault(); addProduct();">
+                        <div class="form-group">
+                            <label for="productName">Product Name</label>
+                            <input type="text" id="productName" required placeholder="e.g., Organic Turmeric, Tomatoes">
+                        </div>
+                        <div class="form-group">
+                            <label for="productPrice">Price (₹)</label>
+                            <input type="number" id="productPrice" required placeholder="e.g., 50.00" step="0.01">
+                        </div>
+                        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div>
+                                <label for="productUnit">Unit</label>
+                                <select id="productUnit" required>
+                                    <option value="per kg">per kg</option>
+                                    <option value="per bundle">per bundle</option>
+                                    <option value="per piece">per piece</option>
+                                    <option value="per dozen">per dozen</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="productFreshness">Freshness Status</label>
+                                <input type="text" id="productFreshness" required placeholder="e.g., Harvested Today">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="productImage">Image URL (Optional Placeholder)</label>
+                            <input type="url" id="productImage" placeholder="https://via.placeholder.com/400x300/...">
+                        </div>
+                        
+                        <button type="submit" class="submit-btn" style="margin-top: 1.5rem;">
+                            Add Product to Market
+                        </button>
+                    </form>
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--color-primary-dark);">My Current Listings</h3>
+                    <p style="color: #4b5563;">Listings added by user ID: <span id="farmerIdDisplay">Loading...</span></p>
+                </div>
+                <!-- Container for Farmer's own listings -->
+                <div id="myListingsContainer">
+                    <p id="noFarmerListings" style="grid-column: 1 / -1; text-align: center; color: #6b7280;">No products currently listed by you.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ADMIN VIEW REMOVED -->
+
+        <!-- Footer (Shared by all main views) -->
+        <footer>
+            <div class="container">
+                <p>&copy; 2024 KisanConnect. A Friendly Farmer-Customer Interface. (User ID: <span id="footerUserId"></span>)</p>
+                <div style="display: flex; justify-content: center; gap: 1.5rem;">
+                    <a href="#">About Us</a>
+                    <a href="#">Farmer Login</a>
+                    <a href="#">Support</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+
+    <!-- JavaScript for Data & Interactivity -->
+    <script type="module">
+        // --- Firebase Imports (using CDN) ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"; // Added signOut
+        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"; 
+
+        // --- Gemini API Configuration ---
+        // NOTE: Please replace the placeholder value with your actual Gemini API Key
+        const apiKey = "AIzaSyCm_nDTXpSESatW4A0rWxgod4-TGf8aHa8"; 
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+        const MAX_RETRIES = 5;
+
+        // --- Global State & Firebase Setup ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let app = null, db = null, auth = null;
+        let currentUserId = null;
+        let currentUserRole = null;
+        let cart = []; 
+        let products = []; 
+        let rawProducts = []; 
+        let farmerListings = []; 
+        let orders = []; 
+
+        // NOTE: The code below is modified to allow easy local configuration.
+        const isHostedEnvironment = typeof __firebase_config !== 'undefined' && __firebase_config.length > 2;
+        let firebaseConfig = {};
+        
+        // --- START LOCAL CONFIGURATION BLOCK ---
+        // You MUST replace the placeholder values below with your actual Firebase project config 
+        // copied from your Firebase Console (Project Settings -> Add App -> Web App)
+        const localFirebaseConfig = { 
+            apiKey: "AIzaSyCdk1C-AKuv-IkvxPHDIYR7m8mso7Z3wLI",
+            authDomain: "kissanconnect-96f0e.firebaseapp.com",
+            projectId: "kissanconnect-96f0e",
+            storageBucket: "kissanconnect-96f0e.firebasestorage.app",
+            messagingSenderId: "744411301115",
+            appId: "1:744411301115:web:008d1376acd641dc1c9c5e",
+            measurementId: "G-L7L36N5V7V"
+        }; 
+        // --- END LOCAL CONFIGURATION BLOCK ---
+        
+        // Determine which config to use: Canvas environment or local fallback
+        if (isHostedEnvironment) {
+            firebaseConfig = JSON.parse(__firebase_config);
+        } else if (localFirebaseConfig.apiKey !== "YOUR_API_KEY_HERE") {
+             // Use the user's provided local config
+            firebaseConfig = localFirebaseConfig;
+            console.warn("--- LOCAL FIREBASE MODE ---");
+            console.warn("Using user-provided local config. Data persistence is ENABLED.");
+            console.warn("--------------------------");
+        } else {
+            // Default mock config (data persistence DISABLED)
+            firebaseConfig = localFirebaseConfig; // Still use the structured object for initialization attempts
+            console.warn("--- LOCAL MOCK MODE ---");
+            console.warn("Database persistence is DISABLED. Update localFirebaseConfig to enable.");
+            console.warn("-----------------------");
+        }
+
+
+        // --- DOM Elements ---
+        const loginView = document.getElementById('loginView');
+        const mainApp = document.getElementById('mainApp');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const authStatus = document.getElementById('authStatus');
+        const currentUserIdDisplay = document.getElementById('currentUserIdDisplay');
+        const roleDisplay = document.getElementById('roleDisplay');
+        const footerUserId = document.getElementById('footerUserId');
+        const customerView = document.getElementById('customerView');
+        const farmerView = document.getElementById('farmerView');
+        // const adminView = document.getElementById('adminView'); // Removed
+        const marketPage = document.getElementById('marketPage');
+        const cartPage = document.getElementById('cartPage');
+        const ordersPage = document.getElementById('ordersPage');
+        const productGrid = document.getElementById('productGrid');
+        const noProductsMessage = document.getElementById('noProductsMessage');
+        const cartCounter = document.getElementById('cartCounter');
+        const messageBox = document.getElementById('messageBox');
+        const messageContent = document.getElementById('messageContent');
+        const messageText = document.getElementById('messageText');
+        const llmModal = document.getElementById('llmModal'); 
+        const llmModalTitle = document.getElementById('llmModalTitle'); 
+        const llmOutput = document.getElementById('llmOutput'); 
+        const llmLoading = document.getElementById('llmLoading'); 
+        const priceRangeInput = document.getElementById('priceRange');
+        const priceRangeValueDisplay = document.getElementById('priceRangeValue');
+        const sortOrderSelect = document.getElementById('sortOrder');
+        const myListingsContainer = document.getElementById('myListingsContainer');
+        const noFarmerListingsMessage = document.getElementById('noFarmerListings');
+        const farmerIdDisplay = document.getElementById('farmerIdDisplay');
+        const cartItemsList = document.getElementById('cartItemsList');
+        const cartSubtotalDisplay = document.getElementById('cartSubtotal');
+        const cartTaxDisplay = document.getElementById('cartTax');
+        const cartGrandTotalDisplay = document.getElementById('cartGrandTotal');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const ordersList = document.getElementById('ordersList'); 
+        const noOrdersMessage = document.getElementById('noOrdersMessage'); 
+        // New DOM elements for navigation added below in the script for correct targeting
+        const ordersButton = document.getElementById('ordersButton');
+        const cartContainer = document.getElementById('cartContainer');
+
+
+        // --- Initialization and View Logic ---
+        async function initApp() { 
+            setLogLevel('Debug');
+            
+            const isConfigValid = firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY_HERE";
+
+            if (isHostedEnvironment || isConfigValid) {
+                try {
+                    app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    db = getFirestore(app);
+                    await authenticateUser();
+                } catch (error) {
+                    console.error("Firebase Initialization FAILED:", error);
+                    currentUserId = 'error-' + Math.random().toString(36).substring(2, 6);
+                    renderLoginView(false); 
+                }
+            } else {
+                // Mock mode fallback when no valid local config is provided
+                currentUserId = 'local-mock-' + Math.random().toString(36).substring(2, 9);
+                renderLoginView(false); 
+            }
+        }
+
+        async function authenticateUser() {
+            // FIX: Use a simple listener/check and then attempt sign-in, but handle failure without crashing
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    currentUserId = user.uid;
+                    renderLoginView(true);
+                } else {
+                    // If no user is signed in, attempt to sign in anonymously/via token
+                    try {
+                        if (initialAuthToken) {
+                            await signInWithCustomToken(auth, initialAuthToken);
+                        } else {
+                            await signInAnonymously(auth); 
+                        }
+                    } catch (e) {
+                        // CRITICAL FIX: If anonymous sign-in fails, we must manually terminate the DB connection 
+                        // attempt so listeners do not continue to fail and crash the app.
+                        console.error("Authentication failed, using anonymous fallback:", e);
+                        
+                        // Set auth/db to null if initialization failed, but only if we are not in the hosted Canvas environment
+                        if (!isHostedEnvironment) {
+                            db = null; 
+                            auth = null;
+                        }
+                        
+                        currentUserId = 'auth-fail-' + Math.random().toString(36).substring(2, 6);
+                        renderLoginView(false); // Render login view with status that DB is off
+                    }
+                }
+            });
+        }
+        
+        function renderLoginView(isDatabaseConnected) {
+            loadingIndicator.style.display = 'none';
+            mainApp.style.display = 'none';
+            loginView.style.display = 'flex';
+            currentUserIdDisplay.textContent = currentUserId;
+
+            const isConfigPlaceholder = localFirebaseConfig.apiKey === "YOUR_API_KEY_HERE";
+
+            if (isDatabaseConnected && db) {
+                authStatus.textContent = `Authentication Ready (User ID: ${currentUserId}). Database is ON.`;
+                authStatus.style.color = 'var(--color-primary-dark)';
+            } else if (isConfigPlaceholder) {
+                 authStatus.textContent = `Local Mock Mode (User ID: ${currentUserId}). Database is OFF. (PASTE YOUR FIREBASE CONFIG to enable persistence)`;
+                 authStatus.style.color = '#ef4444'; // Red for critical alert
+            } else {
+                // This path is hit when custom config is present but connection still failed (e.g., Auth/Rules failure)
+                authStatus.textContent = `Local Mock Mode (User ID: ${currentUserId}). Database is OFF. (Check Firebase rules/network.)`;
+                authStatus.style.color = '#f59e0b';
+            }
+        }
+
+        function renderView(view) {
+            loadingIndicator.style.display = 'none';
+            
+            if (view === 'main') {
+                loginView.style.display = 'none';
+                mainApp.style.display = 'block';
+                
+                roleDisplay.textContent = `Role: ${currentUserRole}`;
+                footerUserId.textContent = currentUserId;
+                
+                customerView.style.display = 'none';
+                farmerView.style.display = 'none';
+                
+                // Toggle navigation visibility based on role
+                if (currentUserRole === 'customer') {
+                    customerView.style.display = 'block';
+                    ordersButton.style.display = 'flex'; // Show for Customer
+                    cartContainer.style.display = 'block'; // Show for Customer
+                    setupProductListener(); 
+                    setupOrderListener();
+                    toggleCustomerView('market');
+                } else if (currentUserRole === 'farmer') {
+                    farmerView.style.display = 'block';
+                    ordersButton.style.display = 'none'; // Hide for Farmer
+                    cartContainer.style.display = 'none'; // Hide for Farmer
+                    farmerIdDisplay.textContent = currentUserId;
+                    setupFarmerListingsListener(); 
+                } 
+            } else { 
+                mainApp.style.display = 'none';
+                loginView.style.display = 'flex';
+            }
+        }
+        
+        function toggleCustomerView(page) {
+            marketPage.style.display = 'none';
+            cartPage.style.display = 'none';
+            ordersPage.style.display = 'none';
+            
+            if (page === 'cart') {
+                cartPage.style.display = 'block';
+                renderCartPage(); 
+            } else if (page === 'orders') {
+                ordersPage.style.display = 'block';
+            } else {
+                marketPage.style.display = 'block';
+            }
+        }
+
+
+        function loginAs(role) {
+            // Enforce only customer or farmer
+            if (role !== 'customer' && role !== 'farmer') {
+                 showMessage("Invalid role selected. Please choose Customer or Farmer.", 'error');
+                 return;
+            }
+            currentUserRole = role;
+            showMessage(`Welcome, ${role}! You are now logged in.`, 'success');
+            renderView('main');
+        }
+
+        // --- SIGN OUT LOGIC ---
+        function signOutUser() {
+            if (auth) {
+                // Attempt Firebase sign out (only useful if signed in with a real account)
+                signOut(auth).then(() => {
+                    console.log("[Auth] User signed out.");
+                }).catch((error) => {
+                    console.error("[Auth] Error signing out:", error);
+                });
+            }
+            
+            // Clear local state
+            currentUserRole = null;
+            cart = []; 
+            products = []; 
+            rawProducts = []; 
+            farmerListings = []; 
+            orders = []; 
+            updateCartCount();
+
+            // Re-render to login view and force re-initialization
+            window.onload();
+        }
+
+
+        // --- CUSTOMER LOGIC: REAL-TIME DATA LISTENER & FILTERING ---
+        function updatePriceValue(value) {
+            priceRangeValueDisplay.textContent = `₹${value}`;
+        }
+        
+        function filterAndSortProducts() {
+            let filteredProducts = [...rawProducts];
+
+            const maxPrice = parseFloat(priceRangeInput.value);
+            filteredProducts = filteredProducts.filter(p => p.price <= maxPrice);
+
+            const sortOrder = sortOrderSelect.value;
+            
+            filteredProducts.sort((a, b) => {
+                switch (sortOrder) {
+                    case 'price_asc': return a.price - b.price;
+                    case 'price_desc': return b.price - a.price;
+                    case 'name_asc': return a.name.localeCompare(b.name);
+                    case 'timestamp_desc': return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+                    default: return 0;
+                }
+            });
+
+            products = filteredProducts; 
+            renderProducts(); 
+        }
+
+        function setupProductListener() {
+            if (!db) {
+                noProductsMessage.textContent = "Cannot load market data: Running in local mock mode.";
+                rawProducts = [
+                    { id: 'mock1', name: 'Organic Tomatoes', price: 65.00, unit: 'per kg', farmer: 'Mock Farm', image: 'https://via.placeholder.com/400x250/f0fdf4/16a34a?text=Tomatoes', freshness: 'Harvested Today', timestamp: new Date().toISOString() },
+                    { id: 'mock2', name: 'Fresh Spinach', price: 20.00, unit: 'per bundle', farmer: 'Mock Farm', image: 'https://via.placeholder.com/400x250/f0fdf4/16a34a?text=Spinach', freshness: 'Morning Pick', timestamp: new Date(Date.now() - 3600000).toISOString() }, 
+                    { id: 'mock3', name: 'Milk', price: 80.00, unit: 'per kg', farmer: 'Mock Farm', image: 'https://via.placeholder.com/400x250/f0fdf4/16a34a?text=Milk', freshness: 'New', timestamp: new Date(Date.now() - 600000).toISOString() }, 
+                    { id: 'mock4', name: 'Premium Cashews', price: 220.00, unit: 'per 250g', farmer: 'Mock Farm', image: 'https://via.placeholder.com/400x250/f0fdf4/16a34a?text=Cashews', freshness: 'Premium', timestamp: new Date(Date.now() - 7200000).toISOString() } 
+                ];
+                priceRangeInput.max = 250; priceRangeInput.value = 250; updatePriceValue(250);
+                filterAndSortProducts(); 
+                return;
+            }
+
+            const productsCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+            
+            onSnapshot(productsCollectionRef, (snapshot) => {
+                const fetchedProducts = [];
+                let maxPrice = 0;
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const price = parseFloat(data.price);
+                    
+                    if (price > maxPrice) { maxPrice = price; }
+                    
+                    const displayFarmerId = data.farmerId ? data.farmerId.substring(0, 8) + '...' : 'N/A';
+
+                    fetchedProducts.push({
+                        id: doc.id, name: data.name, price: price, unit: data.unit,
+                        farmer: `Farmer ID: ${displayFarmerId}`, image: data.image, freshness: data.freshness,
+                        timestamp: data.timestamp 
+                    });
+                });
+                
+                rawProducts = fetchedProducts;
+                
+                maxPrice = Math.ceil(maxPrice / 10) * 10;
+                priceRangeInput.max = maxPrice > 0 ? maxPrice : 250;
+                if (priceRangeInput.value > maxPrice) { priceRangeInput.value = maxPrice; }
+                updatePriceValue(priceRangeInput.value);
+
+                filterAndSortProducts();
+                console.log(`[Firestore] Updated product list. Total items: ${rawProducts.length}`);
+
+            }, (error) => {
+                console.error("Error listening to products:", error);
+                showMessage("Error loading market data. Try refreshing.", 'error');
+            });
+        }
+
+
+        // --- FARMER LOGIC: CRUD & LISTINGS ---
+        function setupFarmerListingsListener() {
+            if (!db) {
+                farmerListings = [
+                    { id: 'mockF1', name: 'Mock Cabbage', price: 30.00, unit: 'per kg', freshness: 'Mock Data', image: 'https://via.placeholder.com/60x60/e0ffec/37a552?text=Cabbage', farmerId: currentUserId },
+                    { id: 'mockF2', name: 'Mock Chillies', price: 95.00, unit: 'per bundle', freshness: 'Local Test', image: 'https://via.placeholder.com/60x60/e0ffec/37a552?text=Chillies', farmerId: currentUserId }
+                ];
+                renderFarmerListings();
+                return;
+            }
+
+            const productsCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+            
+            onSnapshot(productsCollectionRef, (snapshot) => {
+                const fetchedListings = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.farmerId === currentUserId) {
+                        fetchedListings.push({
+                            id: doc.id, name: data.name, price: parseFloat(data.price), unit: data.unit,
+                            freshness: data.freshness, image: data.image, farmerId: data.farmerId
+                        });
+                    }
+                });
+                
+                farmerListings = fetchedListings;
+                renderFarmerListings();
+            }, (error) => {
+                console.error("Error listening to farmer listings:", error);
+                showMessage("Error loading your listings.", 'error');
+            });
+        }
+        
+        function renderFarmerListings() {
+            if (farmerListings.length === 0) {
+                myListingsContainer.innerHTML = noFarmerListingsMessage.outerHTML;
+            } else {
+                noFarmerListingsMessage.style.display = 'none';
+
+                const html = farmerListings.map(p => `
+                    <div class="listing-card">
+                        <div>
+                            <h4>${p.name}</h4>
+                            <p>Price: ₹${p.price.toFixed(2)} / ${p.unit}</p>
+                            <p>Freshness: ${p.freshness}</p>
+                        </div>
+                        <button onclick="optimizeListing('${p.id}')" class="optimize-btn">✨ Optimize Listing</button>
+                        <button onclick="deleteProduct('${p.id}', '${p.name}')" class="delete-btn">Delete Listing</button>
+                    </div>
+                `).join('');
+                
+                myListingsContainer.innerHTML = html;
+            }
+        }
+        
+        async function addProduct() {
+            if (currentUserRole !== 'farmer') { showMessage("Access Denied. Only Farmers can add products.", 'error'); return; }
+
+            const name = document.getElementById('productName').value;
+            const price = parseFloat(document.getElementById('productPrice').value);
+            const unit = document.getElementById('productUnit').value;
+            const freshness = document.getElementById('productFreshness').value;
+            const image = document.getElementById('productImage').value || 'https://via.placeholder.com/400x300/e0ffec/37a552?text=Fresh+Produce';
+            
+            if (!name || isNaN(price) || !unit || !freshness) { showMessage("Please fill out all required product fields.", 'error'); return; }
+            
+            // --- Handle Mock/DB Failure Separately ---
+            if (!db) { 
+                // Display the mock message immediately, then reset and exit.
+                showMessage(`Product "${name}" added to mock list, but NOT SAVED to database.`, 'error'); 
+                document.getElementById('addProductForm').reset(); 
+                return;
+            }
+            // --- END FIX ---
+
+
+            const newProduct = {
+                farmerId: currentUserId, name, price: price.toFixed(2), unit, freshness, image,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                const productsCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+                await addDoc(productsCollectionRef, newProduct); 
+                
+                // --- FIX APPLIED HERE: Use setTimeout to ensure pop-up renders before function exits ---
+                setTimeout(() => {
+                    showMessage(`Product "${name}" successfully added! (Visible to all Customers)`, 'success');
+                }, 50); 
+                // --- END FIX ---
+                
+                document.getElementById('addProductForm').reset(); 
+
+            } catch (e) {
+                console.error("Failed to save product to Firestore:", e);
+                showMessage("Error: Could not save product to database. Check network or console.", 'error');
+            }
+        }
+
+        async function deleteProduct(productId, productName) {
+            if (currentUserRole !== 'farmer') { showMessage("Access Denied. Only Farmers can delete their listings.", 'error'); return; }
+            if (!db) { showMessage(`Cannot delete "${productName}". Database connection failed.`, 'error'); return; }
+
+            if (!window.confirm(`Are you sure you want to delete "${productName}"? This action cannot be undone.`)) { return; }
+
+            try {
+                const productDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', productId);
+                await deleteDoc(productDocRef);
+                showMessage(`Listing "${productName}" successfully deleted.`, 'error'); 
+            } catch (e) {
+                console.error("Failed to delete document:", e);
+                showMessage(`Error deleting listing for "${productName}".`, 'error');
+            }
+        }
+        
+        // --- CART/ORDER LOGIC ---
+        function calculateCartTotals() {
+            const subtotal = cart.reduce((sum, item) => sum + parseFloat(item.price), 0);
+            const taxRate = 0.05; 
+            const tax = subtotal * taxRate;
+            const grandTotal = subtotal + tax;
+            return { subtotal, tax, grandTotal };
+        }
+
+        function renderCartPage() {
+            updateCartCount();
+            const totals = calculateCartTotals();
+            
+            if (cart.length === 0) {
+                cartItemsList.innerHTML = `<p class="empty-cart-message">Your basket is currently empty. Start adding some fresh produce!</p>`;
+                checkoutBtn.disabled = true; checkoutBtn.style.opacity = 0.6;
+            } else {
+                checkoutBtn.disabled = false; checkoutBtn.style.opacity = 1;
+                
+                const html = cart.map((item, index) => `
+                    <div class="cart-item">
+                        <div class="item-details">
+                            <img src="${item.image}" alt="${item.name}" style="height: 60px; width: 60px; object-fit: cover; border-radius: 0.5rem;"
+                                 onerror="this.onerror=null;this.src='https://via.placeholder.com/60x60/e0ffec/37a552?text=Item';">
+                            <p>${item.name}</p>
+                        </div>
+                        <p>₹${parseFloat(item.price).toFixed(2)} / ${item.unit}</p>
+                        <p>1</p>
+                        <button onclick="removeFromCart(${index})" class="remove-btn" title="Remove Item">&times;</button>
+                    </div>
+                `).join('');
+                
+                cartItemsList.innerHTML = `
+                    <div class="cart-item" style="font-weight: 700; border-bottom: 2px solid var(--color-primary-dark); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                        <p>Product</p><p>Price</p><p>Qty</p><p>Remove</p>
+                    </div>
+                    ${html}
+                `;
+            }
+            
+            cartSubtotalDisplay.textContent = `₹${totals.subtotal.toFixed(2)}`;
+            cartTaxDisplay.textContent = `₹${totals.tax.toFixed(2)}`;
+            cartGrandTotalDisplay.textContent = `₹${totals.grandTotal.toFixed(2)}`;
+        }
+        
+        function removeFromCart(index) {
+            const name = cart[index].name;
+            cart.splice(index, 1);
+            showMessage(`${name} removed from basket.`, 'error');
+            renderCartPage(); 
+        }
+        
+        async function checkout() {
+            if (cart.length === 0) { showMessage("Your cart is empty. Please add items before checking out.", 'error'); return; }
+            
+            const totals = calculateCartTotals();
+            
+            const orderDetails = {
+                userId: currentUserId,
+                items: cart.map(item => ({ id: item.id, name: item.name, price: item.price, unit: item.unit, farmerId: item.farmer.replace('Farmer ID: ', ''), image: item.image })),
+                subtotal: totals.subtotal.toFixed(2), tax: totals.tax.toFixed(2), grandTotal: totals.grandTotal.toFixed(2),
+                status: 'Processing', orderDate: new Date().toISOString(),
+                deliveryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString() 
+            };
+            
+            if (db) {
+                try {
+                    const ordersCollectionRef = collection(db, 'artifacts', appId, 'users', currentUserId, 'orders');
+                    await addDoc(ordersCollectionRef, orderDetails);
+                    showMessage(`Order Placed! Total: ₹${totals.grandTotal.toFixed(2)}. Tracking details added to 'My Orders'.`, 'success');
+                } catch (e) {
+                    showMessage("Error: Could not save order details. Please check your network and database rules.", 'error');
+                }
+            } else {
+                showMessage(`Order Placed! (Local Mock Mode). Total: ₹${totals.grandTotal.toFixed(2)}.`, 'success');
+            }
+            
+            cart = [];
+            updateCartCount();
+            toggleCustomerView('market');
+        }
+        
+        function updateCartCount() {
+            cartCounter.textContent = cart.length;
+        }
+
+        // --- ORDER HISTORY LOGIC ---
+        function setupOrderListener() {
+            if (!db) {
+                orders = [
+                    { id: 'MOCK-1', grandTotal: '150.50', status: 'Delivered', orderDate: new Date(Date.now() - 7*24*3600000).toISOString(), deliveryDate: new Date(Date.now() - 4*24*3600000).toISOString(), items: [{name: 'Tomatoes', price: 65, unit: 'per kg'}, {name: 'Milk', price: 80, unit: 'per kg'}] },
+                    { id: 'MOCK-2', grandTotal: '220.00', status: 'Shipped', orderDate: new Date(Date.now() - 2*24*3600000).toISOString(), deliveryDate: new Date(Date.now() + 1*24*3600000).toISOString(), items: [{name: 'Chillies', price: 110, unit: 'per bundle'}, {name: 'Spinach', price: 110, unit: 'per bundle'}] }
+                ];
+                renderOrders();
+                return;
+            }
+            
+            const ordersCollectionRef = collection(db, 'artifacts', appId, 'users', currentUserId, 'orders');
+            
+            onSnapshot(ordersCollectionRef, (snapshot) => {
+                orders = [];
+                snapshot.forEach(doc => { orders.push({ id: doc.id, ...doc.data() }); });
+
+                orders.sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
+                renderOrders();
+            }, (error) => {
+                console.error("Error listening to orders:", error);
+            });
+        }
+        
+        function renderOrders() {
+            if (orders.length === 0) {
+                ordersList.innerHTML = noOrdersMessage.outerHTML;
+            } else {
+                noOrdersMessage.style.display = 'none';
+                
+                const html = orders.map(order => {
+                    const orderDate = new Date(order.orderDate).toLocaleDateString();
+                    const deliveryDate = new Date(order.deliveryDate).toLocaleDateString();
+                    
+                    const deliveryInfo = order.status === 'Delivered' 
+                        ? `<span class="order-delivery" style="color: var(--color-primary-dark);">Delivered on: ${deliveryDate}</span>`
+                        : `<span class="order-delivery" style="color: #f59e0b;">Est. Delivery: ${deliveryDate}</span>`;
+                        
+                    const itemList = order.items.map(item => `<p>${item.name} (₹${item.price} / ${item.unit})</p>`).join('');
+                        
+                    return `
+                        <div class="order-card">
+                            <div class="order-header-card">
+                                <span class="order-id">Order ID: ${order.id.substring(0, 8)}...</span>
+                                <span class="order-status">${order.status}</span>
+                            </div>
+                            <div class="order-details-summary">
+                                <span class="order-total">Total: ₹${order.grandTotal}</span>
+                                ${deliveryInfo}
+                            </div>
+                            <p style="font-size: 0.8rem; color: #6b7280; margin-top: 0.5rem;">Ordered on: ${orderDate}</p>
+                            <div class="order-item-list">
+                                <p style="font-weight: 700; color: #1f2937;">Items Purchased:</p>
+                                ${itemList}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                ordersList.innerHTML = html;
+            }
+        }
+
+        // --- Utility for API calls with Exponential Backoff (Gemini) ---
+        // NOTE: This function requires a valid Gemini API Key to work.
+        async function retryFetch(url, options, retries = 0) {
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    if (response.status === 429 && retries < MAX_RETRIES) {
+                        const delay = Math.pow(2, retries) * 1000 + Math.random() * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        return retryFetch(url, options, retries + 1);
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            } catch (error) {
+                if (retries < MAX_RETRIES) {
+                    const delay = Math.pow(2, retries) * 1000 + Math.random() * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return retryFetch(url, options, retries + 1);
+                }
+                throw new Error("Failed to fetch from Gemini API after multiple retries.");
+            }
+        }
+
+        // --- LLM Modal Functions (Generic for all LLM outputs) ---
+        function showLLMModal(title, isLoading = true) {
+            llmModal.style.display = 'flex';
+            llmModalTitle.innerHTML = `<span style="margin-right: 0.5rem;">✨</span> ${title}`;
+            
+            if (isLoading) { llmOutput.innerHTML = llmLoading.outerHTML; }
+            
+            setTimeout(() => {
+                document.getElementById('llmContent').style.transform = 'scale(1)';
+                document.getElementById('llmContent').style.opacity = '1';
+            }, 50);
+        }
+
+        function closeLLMModal() {
+            document.getElementById('llmContent').style.transform = 'scale(0.95)';
+            document.getElementById('llmContent').style.opacity = '0';
+            setTimeout(() => { llmModal.style.display = 'none'; }, 300);
+        }
+        
+        function markdownToHtml(markdownText) {
+            return markdownText
+                .replace(/^#\s*(.*)$/gm, '<h4 style="font-size: 1.25rem; font-weight: 700; color: #1f2937; margin: 0.5rem 0;">$1</h4>')
+                .replace(/^\*\s*(.*)$/gm, '<li>$1</li>') 
+                .replace(/^- (.*)$/gm, '<li>$1</li>') 
+                .replace(/^([0-9]+\.)\s*(.*)$/gm, '<p style="font-weight: 600; color: #8b5cf6;">$1</p><p style="margin-top: 0;">$2</p>') 
+                .replace(/\*\*(.*)\*\*/gm, '<strong>$1</strong>');
+        }
+
+        /* Removed generateRecipe function */
+        
+        /* Removed checkFreshness function */
+
+        async function optimizeListing(productId) {
+            if (currentUserRole !== 'farmer') { showMessage("Optimization is only available for Farmers.", 'error'); return; }
+            const product = farmerListings.find(p => p.id === productId); 
+            if (!product) { showMessage("Listing details not found.", 'error'); return; }
+
+            // --- Gemini API Key Check ---
+            if (!isHostedEnvironment && apiKey === "YOUR_GEMINI_API_KEY_HERE") {
+                llmOutput.innerHTML = `<p style="color: #ef4444; font-weight: 600;">Error: Gemini API Key is missing. Please set the apiKey variable in the script.</p>`;
+                showLLMModal("API Key Required", false);
+                return;
+            }
+            // --- End Check ---
+
+            showLLMModal("Listing Optimization Suggestions", true);
+            const userQuery = `Analyze the following product listing data and suggest 3 key improvements for better customer appeal and clarity. Current Listing: Name: ${product.name}, Price: ${product.price}, Unit: ${product.unit}, Freshness Note: ${product.freshness}. Suggestions should cover: 1. Name/Branding suggestion, 2. Unit/Pricing clarity suggestion, and 3. Marketing/Description sentence. List suggestions using a numbered list.`;
+
+            const payload = { contents: [{ parts: [{ text: userQuery }] }], systemInstruction: { parts: [{ text: "You are a top e-commerce listing optimizer focused on maximizing sales for agricultural products. Respond concisely and clearly using Markdown formatting." }] } };
+            
+            try {
+                const response = await retryFetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                let generatedText = "Unable to generate optimization suggestions right now.";
+                if (response.candidates && response.candidates.length > 0) { generatedText = response.candidates[0].content.parts[0].text; }
+                llmOutput.innerHTML = `<div style="padding: 1rem; background-color: #f9fafb; border-radius: 0.5rem;">${markdownToHtml(generatedText)}</div>`;
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                llmOutput.innerHTML = `<p style="color: #ef4444; font-weight: 600;">Error: Could not connect to the AI service. Please check your network.</p>`;
+            }
+        }
+        
+        // --- Standard Message Box / Modal Functions (Unchanged) ---
+        function showMessage(text, type = 'success') {
+            messageText.textContent = text;
+            const titleElement = messageContent.querySelector('h3');
+            const buttonElement = messageContent.querySelector('button');
+
+            titleElement.classList.remove('modal-title-error', 'modal-title-success');
+            buttonElement.classList.remove('success', 'error'); 
+
+            if (type === 'error') {
+                titleElement.textContent = 'Oops!'; titleElement.classList.add('modal-title-error'); buttonElement.classList.add('error');
+            } else {
+                titleElement.textContent = 'Success!'; titleElement.classList.add('modal-title-success'); buttonElement.classList.add('success');
+            }
+
+            messageBox.style.display = 'flex';
+            setTimeout(() => { messageContent.style.transform = 'scale(1)'; messageContent.style.opacity = '1'; }, 50);
+        }
+
+        function closeMessage() {
+            messageContent.style.transform = 'scale(0.95)'; messageContent.style.opacity = '0';
+            setTimeout(() => { messageBox.style.display = 'none'; }, 300);
+        }
+
+        function addToCart(productId) {
+            const product = rawProducts.find(p => p.id === productId); 
+            if (product) {
+                cart.push(product); 
+                updateCartCount();
+                showMessage(`${product.name} added to your basket! Current items: ${cart.length}`, 'success');
+            } else { showMessage('Product not found. Please try again.', 'error'); }
+        }
+        
+        function createProductCardHTML(product) {
+            const errorPlaceholderUrl = `https://via.placeholder.com/400x300/e0ffec/37a552?text=${encodeURIComponent(product.name.replace(/\s/g, '+'))}`;
+
+            return `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}" 
+                         onerror="this.onerror=null;this.src='${errorPlaceholderUrl}';"
+                         loading="lazy">
+                    
+                    <div class="card-content">
+                        <div class="card-header">
+                            <h3>${product.name}</h3>
+                            <span class="freshness-tag">${product.freshness}</span>
+                        </div>
+                        
+                        <p class="price-tag">
+                            ₹${parseFloat(product.price).toFixed(2)}
+                            <span class="unit">/${product.unit}</span>
+                        </p>
+                        
+                        <p class="seller-info">
+                            Seller: <span class="name">${product.farmer}</span>
+                        </p>
+
+                        <!-- Removed Check Freshness Button -->
+                        <button onclick="addToCart('${product.id}')" class="add-to-cart-btn">
+                            Add to Basket
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+
+        function renderProducts() {
+            if (products.length === 0) {
+                productGrid.innerHTML = noProductsMessage.outerHTML;
+                noProductsMessage.style.display = 'block';
+                noProductsMessage.textContent = "No products match your current filters. Try adjusting the price range or sorting options.";
+            } else {
+                noProductsMessage.style.display = 'none';
+                productGrid.innerHTML = products.map(createProductCardHTML).join('');
+            }
+        }
+
+        // --- Global Access for HTML Buttons ---
+        window.loginAs = loginAs;
+        window.closeMessage = closeMessage;
+        window.closeLLMModal = closeLLMModal;
+        window.optimizeListing = optimizeListing; 
+        window.addToCart = addToCart;
+        window.addProduct = addProduct;
+        window.updatePriceValue = updatePriceValue;
+        window.filterAndSortProducts = filterAndSortProducts;
+        window.deleteProduct = deleteProduct; 
+        window.toggleCustomerView = toggleCustomerView; 
+        window.removeFromCart = removeFromCart; 
+        window.checkout = checkout; 
+        window.createProductCardHTML = createProductCardHTML; 
+        window.signOutUser = signOutUser; 
+
+        // --- Initialization on Load ---
+        window.onload = initApp;
+    </script>
+
+</body>
+</html>
