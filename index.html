@@ -14,6 +14,8 @@
             --color-secondary: #8b5cf6; /* Purple */
             --color-background: #f8fafc; 
             --color-text-dark: #1f2937;
+            --color-chat-user: #e0f2f1; /* Teal 50 for user */
+            --color-chat-gemini: #f3f4f6; /* Gray 100 for AI */
         }
         body { 
             font-family: 'Inter', sans-serif; 
@@ -322,6 +324,145 @@
         .order-total { font-size: 1.25rem; font-weight: 800; color: #ef4444; }
         .order-delivery { font-size: 0.875rem; font-weight: 600; color: #4b5563; }
         .order-item-list { margin-top: 1rem; padding: 0.5rem 0; border-top: 1px dashed #f3f4f6; }
+
+        /* 12. CHAT BOT STYLES */
+        #chatContainer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        #chatToggleBtn {
+            background-color: var(--color-secondary);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #chatToggleBtn:hover {
+            transform: scale(1.1);
+        }
+
+        #chatWindow {
+            position: absolute;
+            bottom: 80px; /* Above the toggle button */
+            right: 0;
+            width: 320px;
+            height: 400px;
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateY(100%); /* Start off-screen */
+            opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            pointer-events: none; /* Disable interaction until visible */
+        }
+
+        #chatWindow.open {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #chatHeader {
+            background-color: var(--color-secondary);
+            color: white;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #chatMessages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background-color: #fcfcfc;
+        }
+
+        .chat-message {
+            margin-bottom: 0.75rem;
+            max-width: 85%;
+        }
+
+        .chat-message p {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            line-height: 1.4;
+            font-size: 0.9rem;
+            white-space: pre-wrap; /* Preserve line breaks in markdown output */
+        }
+
+        .user-message {
+            margin-left: auto;
+            text-align: right;
+        }
+        .user-message p {
+            background-color: var(--color-chat-user);
+            color: #064e3b;
+        }
+
+        .gemini-message {
+            margin-right: auto;
+            text-align: left;
+        }
+        .gemini-message p {
+            background-color: var(--color-chat-gemini);
+            color: var(--color-text-dark);
+            border: 1px solid #e5e7eb;
+        }
+
+        #chatInputContainer {
+            border-top: 1px solid #e5e7eb;
+            padding: 0.5rem;
+            display: flex;
+        }
+
+        #chatInput {
+            flex-grow: 1;
+            padding: 0.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            margin-right: 0.5rem;
+        }
+
+        #chatSendBtn {
+            background-color: var(--color-primary-dark);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        #chatSendBtn:hover {
+            background-color: var(--color-primary);
+        }
+
+        .chat-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #8b5cf6;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
     </style>
 </head>
 <body class="antialiased">
@@ -648,6 +789,30 @@
         </footer>
     </main>
 
+    <!-- NEW: AI Chatbot Container -->
+    <div id="chatContainer" style="display: none;">
+        <button id="chatToggleBtn" onclick="toggleChat()">
+            <!-- Chat Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </button>
+
+        <div id="chatWindow" class="">
+            <div id="chatHeader">
+                <span>KisanConnect AI Helper</span>
+            </div>
+            <div id="chatMessages">
+                <!-- Messages will be rendered here -->
+                <div class="chat-message gemini-message">
+                    <p>Hello! I'm the KisanConnect AI. I can assist you with product info, ordering, or farming advice based on your current role.</p>
+                </div>
+            </div>
+            <div id="chatInputContainer">
+                <input type="text" id="chatInput" placeholder="Ask me anything..." onkeydown="if(event.key === 'Enter') sendMessage()">
+                <button id="chatSendBtn" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- JavaScript for Data & Interactivity -->
     <script type="module">
@@ -656,6 +821,39 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"; // Added signOut
         import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"; 
+        
+        // --- Modal Utility Function ---
+        function closeMessage() {
+            document.getElementById('messageContent').style.transform = 'scale(0.95)';
+            document.getElementById('messageContent').style.opacity = '0';
+            setTimeout(() => { document.getElementById('messageBox').style.display = 'none'; }, 300);
+        }
+        
+        function showMessage(text, type) {
+            const messageBox = document.getElementById('messageBox');
+            const messageContent = document.getElementById('messageContent');
+            const messageText = document.getElementById('messageText');
+            const modalTitle = document.querySelector('.modal-title-success');
+            const modalBtn = document.querySelector('.modal-btn.success');
+            
+            messageText.textContent = text;
+            
+            if (type === 'error') {
+                modalTitle.textContent = 'Oops!';
+                modalTitle.style.color = '#ef4444'; // Red
+                modalBtn.style.backgroundColor = '#ef4444';
+            } else {
+                modalTitle.textContent = 'Success!';
+                modalTitle.style.color = 'var(--color-primary-dark)';
+                modalBtn.style.backgroundColor = 'var(--color-primary-dark)';
+            }
+
+            messageBox.style.display = 'flex';
+            setTimeout(() => {
+                messageContent.style.transform = 'scale(1)';
+                messageContent.style.opacity = '1';
+            }, 50);
+        }
 
         // --- Gemini API Configuration ---
         // NOTE: Please replace the placeholder value with your actual Gemini API Key
@@ -675,6 +873,7 @@
         let rawProducts = []; 
         let farmerListings = []; 
         let orders = []; 
+        let chatHistory = []; // New array to hold conversation context
         // New State for Location
         let userLocation = { city: 'Unknown', coords: null };
 
@@ -732,9 +931,9 @@
         const productGrid = document.getElementById('productGrid');
         const noProductsMessage = document.getElementById('noProductsMessage');
         const cartCounter = document.getElementById('cartCounter');
-        const messageBox = document.getElementById('messageBox');
-        const messageContent = document.getElementById('messageContent');
-        const messageText = document.getElementById('messageText');
+        // const messageBox = document.getElementById('messageBox'); // Already defined above
+        // const messageContent = document.getElementById('messageContent'); // Already defined above
+        // const messageText = document.getElementById('messageText'); // Already defined above
         const llmModal = document.getElementById('llmModal'); 
         const llmModalTitle = document.getElementById('llmModalTitle'); 
         const llmOutput = document.getElementById('llmOutput'); 
@@ -758,6 +957,12 @@
         const locationText = document.getElementById('locationText');
         const locationModal = document.getElementById('locationModal');
         const manualLocationInput = document.getElementById('manualLocationInput');
+        
+        // Chatbot DOM elements
+        const chatContainer = document.getElementById('chatContainer');
+        const chatWindow = document.getElementById('chatWindow');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
 
 
         // --- Initialization and View Logic ---
@@ -823,6 +1028,7 @@
         function renderLoginView(isDatabaseConnected) {
             loadingIndicator.style.display = 'none';
             mainApp.style.display = 'none';
+            chatContainer.style.display = 'none'; // Hide chat on login view
             loginView.style.display = 'flex';
             currentUserIdDisplay.textContent = currentUserId;
 
@@ -847,6 +1053,20 @@
             if (view === 'main') {
                 loginView.style.display = 'none';
                 mainApp.style.display = 'block';
+                chatContainer.style.display = 'block'; // Show chat on main app
+                
+                // Reset chat history when user logs in/switches role
+                chatHistory = [];
+                // Add initial message to the chat history
+                chatHistory.push({
+                    role: "model",
+                    parts: [{ text: "Hello! I'm the KisanConnect AI. I can assist you with product info, ordering, or farming advice based on your current role." }]
+                });
+
+                // Clear previous chat messages before rendering new ones
+                chatMessages.innerHTML = '';
+                renderMessage("Hello! I'm the KisanConnect AI. I can assist you with product info, ordering, or farming advice based on your current role.", "gemini");
+
                 
                 roleDisplay.textContent = `Role: ${currentUserRole}`;
                 footerUserId.textContent = currentUserId;
@@ -871,6 +1091,7 @@
                 } 
             } else { 
                 mainApp.style.display = 'none';
+                chatContainer.style.display = 'none'; 
                 loginView.style.display = 'flex';
             }
         }
@@ -1075,6 +1296,57 @@
             renderProducts(); 
         }
 
+        function createProductCardHTML(product) {
+            // Function required by renderProducts to build the grid view
+            const price = parseFloat(product.price);
+            const imageFallback = product.image || `https://via.placeholder.com/400x250/e0ffec/37a552?text=${encodeURIComponent(product.name.replace(/\s/g, '+'))}`;
+            const displayFarmerId = product.farmer.replace('Farmer ID: ', '');
+
+            return `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}" 
+                         onerror="this.onerror=null;this.src='${imageFallback}';"
+                         loading="lazy">
+                    <div class="card-content">
+                        <div class="card-header">
+                            <h3>${product.name}</h3>
+                            <span class="freshness-tag">${product.freshness}</span>
+                        </div>
+                        <p class="price-tag">₹${price.toFixed(2)} <span class="unit">/${product.unit.replace('per ', '').trim()}</span></p>
+                        <p class="seller-info">Seller: ${displayFarmerId}</p>
+                        <button onclick="addToCart('${product.id}')" class="add-to-cart-btn">
+                            Add to Basket
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderProducts() {
+            if (products.length === 0 && rawProducts.length === 0) {
+                noProductsMessage.textContent = "Loading market data...";
+            } else if (products.length === 0 && rawProducts.length > 0) {
+                noProductsMessage.textContent = "No products match your current filters (price/sort).";
+            } else {
+                noProductsMessage.style.display = 'none';
+
+                const html = products.map(createProductCardHTML).join('');
+                productGrid.innerHTML = html;
+            }
+        }
+
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                cart.push(product);
+                updateCartCount();
+                showMessage(`${product.name} added to basket!`, 'success');
+            }
+        }
+        // ... (end of addToCart)
+
+
         function setupProductListener() {
             if (!db) {
                 noProductsMessage.textContent = "Cannot load market data: Running in local mock mode.";
@@ -1128,6 +1400,51 @@
 
 
         // --- FARMER LOGIC: CRUD & LISTINGS ---
+        
+        // --- LLM FUNCTION FOR OPTIMIZATION ---
+        async function optimizeListing(productId) {
+            if (apiKey === "YOUR_GEMINI_API_KEY_HERE" && !isHostedEnvironment) {
+                showMessage("Gemini API Key is missing. Cannot optimize listing.", 'error');
+                return;
+            }
+            
+            const listing = farmerListings.find(p => p.id === productId);
+            if (!listing) return;
+
+            showLLMModal('Optimizing Listing...', true);
+            llmOutput.innerHTML = llmLoading.outerHTML;
+
+            const userQuery = `You are a market expert. Provide concrete suggestions to improve this product listing for better customer appeal and sales: Product Name: ${listing.name}, Price: ₹${listing.price} / ${listing.unit}, Freshness: ${listing.freshness}. Focus on the name, description clarity, and unit usage. Respond in a brief list format.`;
+
+            const systemPrompt = `You are the KisanConnect Farm Business AI. Your goal is to help the farmer maximize their sales, improve product quality, and manage their listings. Your tone is helpful, professional, and advisory. Context: The user is a farmer using the KisanConnect app.`;
+
+            const payload = { 
+                contents: [{ role: "user", parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] } 
+            };
+
+            try {
+                const response = await retryFetch(apiUrl, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify(payload) 
+                });
+
+                const generatedText = response.candidates?.[0]?.content?.parts?.[0]?.text || "No suggestions found.";
+                
+                llmOutput.innerHTML = `
+                    <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; color: #1f2937;">Suggestions for "${listing.name}":</h4>
+                    <div style="padding-left: 1rem; border-left: 3px solid #8b5cf6;">
+                        ${markdownToHtml(generatedText)}
+                    </div>
+                `;
+            } catch (error) {
+                llmOutput.innerHTML = `<p style="color: #ef4444;">Error: Could not connect to AI service. Check your Gemini API key and network connection.</p>`;
+                console.error("Gemini API Optimization Error:", error);
+            }
+        }
+        
+        
         function setupFarmerListingsListener() {
             if (!db) {
                 farmerListings = [
@@ -1440,121 +1757,120 @@
                 .replace(/^([0-9]+\.)\s*(.*)$/gm, '<p style="font-weight: 600; color: #8b5cf6;">$1</p><p style="margin-top: 0;">$2</p>') 
                 .replace(/\*\*(.*)\*\*/gm, '<strong>$1</strong>');
         }
-
-        /* Removed generateRecipe function */
         
-        /* Removed checkFreshness function */
+        // --- CHAT BOT LOGIC ---
+        let isChatOpen = false;
 
-        async function optimizeListing(productId) {
-            if (currentUserRole !== 'farmer') { showMessage("Optimization is only available for Farmers.", 'error'); return; }
-            const product = farmerListings.find(p => p.id === productId); 
-            if (!product) { showMessage("Listing details not found.", 'error'); return; }
+        function toggleChat() {
+            isChatOpen = !isChatOpen;
+            if (isChatOpen) {
+                chatWindow.classList.add('open');
+                chatInput.focus();
+                chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+            } else {
+                chatWindow.classList.remove('open');
+            }
+        }
+        
+        function renderMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-message', sender === 'user' ? 'user-message' : 'gemini-message');
+            
+            // Basic formatting for Gemini output
+            const formattedText = sender === 'gemini' ? markdownToHtmlChat(text) : text;
+            messageDiv.innerHTML = `<p>${formattedText}</p>`;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function renderLoadingMessage() {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.classList.add('chat-message', 'gemini-message');
+            loadingDiv.id = 'chatLoading';
+            loadingDiv.innerHTML = `<p style="display:flex; align-items:center;">
+                                        <span class="chat-spinner"></span> Thinking...
+                                    </p>`;
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function removeLoadingMessage() {
+            const loading = document.getElementById('chatLoading');
+            if (loading) loading.remove();
+        }
+
+        function markdownToHtmlChat(markdownText) {
+            // Converts basic markdown to HTML for display in the chat window
+            return markdownText
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                .replace(/\n/g, '<br>') // Newlines
+                .replace(/^- (.*)$/gm, '<li style="margin-left: 1rem; list-style-type: disc;">$1</li>') // List items
+                .replace(/^\*\s*(.*)$/gm, '<li style="margin-left: 1rem; list-style-type: disc;">$1</li>'); // List items
+        }
+
+
+        async function sendMessage() {
+            const userQuery = chatInput.value.trim();
+            if (!userQuery) return;
 
             // --- Gemini API Key Check ---
             if (!isHostedEnvironment && apiKey === "YOUR_GEMINI_API_KEY_HERE") {
-                llmOutput.innerHTML = `<p style="color: #ef4444; font-weight: 600;">Error: Gemini API Key is missing. Please set the apiKey variable in the script.</p>`;
-                showLLMModal("API Key Required", false);
+                renderMessage("Error: Gemini API Key is missing. Please set the apiKey variable in the script to enable the chat.", 'gemini');
                 return;
             }
             // --- End Check ---
 
-            showLLMModal("Listing Optimization Suggestions", true);
-            const userQuery = `Analyze the following product listing data and suggest 3 key improvements for better customer appeal and clarity. Current Listing: Name: ${product.name}, Price: ${product.price}, Unit: ${product.unit}, Freshness Note: ${product.freshness}. Suggestions should cover: 1. Name/Branding suggestion, 2. Unit/Pricing clarity suggestion, and 3. Marketing/Description sentence. List suggestions using a numbered list.`;
 
-            const payload = { contents: [{ parts: [{ text: userQuery }] }], systemInstruction: { parts: [{ text: "You are a top e-commerce listing optimizer focused on maximizing sales for agricultural products. Respond concisely and clearly using Markdown formatting." }] } };
+            renderMessage(userQuery, 'user');
+            chatInput.value = '';
+            renderLoadingMessage();
+            
+            // Add user query to chat history
+            chatHistory.push({ role: "user", parts: [{ text: userQuery }] });
+
+            // Determine system instruction based on role
+            let systemPrompt = "";
+            if (currentUserRole === 'farmer') {
+                systemPrompt = `You are the KisanConnect Farm Business AI. Your goal is to help the farmer maximize their sales, improve product quality, and manage their listings. Your tone is helpful, professional, and advisory. Context: The user is a farmer using the KisanConnect app.`;
+            } else { // Customer
+                systemPrompt = `You are the KisanConnect Customer AI. Your role is to provide information on fresh produce, suggest meal ideas, answer questions about orders, and help with navigation. Your tone is friendly, welcoming, and informative. Context: The user is a customer using the KisanConnect app.`;
+            }
+            
+            const payload = { 
+                contents: chatHistory,
+                systemInstruction: { parts: [{ text: systemPrompt }] } 
+            };
             
             try {
-                const response = await retryFetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                let generatedText = "Unable to generate optimization suggestions right now.";
-                if (response.candidates && response.candidates.length > 0) { generatedText = response.candidates[0].content.parts[0].text; }
-                llmOutput.innerHTML = `<div style="padding: 1rem; background-color: #f9fafb; border-radius: 0.5rem;">${markdownToHtml(generatedText)}</div>`;
+                const response = await retryFetch(apiUrl, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify(payload) 
+                });
+                
+                removeLoadingMessage();
+                
+                let generatedText = "Sorry, I couldn't process that request right now.";
+                if (response.candidates && response.candidates.length > 0 && response.candidates[0].content.parts[0].text) {
+                    generatedText = response.candidates[0].content.parts[0].text;
+                }
+
+                renderMessage(generatedText, 'gemini');
+                
+                // Add AI response to chat history
+                chatHistory.push({ role: "model", parts: [{ text: generatedText }] });
+
             } catch (error) {
-                console.error("Gemini API Error:", error);
-                llmOutput.innerHTML = `<p style="color: #ef4444; font-weight: 600;">Error: Could not connect to the AI service. Please check your network.</p>`;
+                removeLoadingMessage();
+                console.error("Chat API Error:", error);
+                renderMessage("A network error occurred. Please check your API key and connection.", 'gemini');
             }
         }
         
-        // --- Standard Message Box / Modal Functions (Unchanged) ---
-        function showMessage(text, type = 'success') {
-            messageText.textContent = text;
-            const titleElement = messageContent.querySelector('h3');
-            const buttonElement = messageContent.querySelector('button');
-
-            titleElement.classList.remove('modal-title-error', 'modal-title-success');
-            buttonElement.classList.remove('success', 'error'); 
-
-            if (type === 'error') {
-                titleElement.textContent = 'Oops!'; titleElement.classList.add('modal-title-error'); buttonElement.classList.add('error');
-            } else {
-                titleElement.textContent = 'Success!'; titleElement.classList.add('modal-title-success'); buttonElement.classList.add('success');
-            }
-
-            messageBox.style.display = 'flex';
-            setTimeout(() => { messageContent.style.transform = 'scale(1)'; messageContent.style.opacity = '1'; }, 50);
-        }
-
-        function closeMessage() {
-            messageContent.style.transform = 'scale(0.95)'; messageContent.style.opacity = '0';
-            setTimeout(() => { messageBox.style.display = 'none'; }, 300);
-        }
-
-        function addToCart(productId) {
-            const product = rawProducts.find(p => p.id === productId); 
-            if (product) {
-                cart.push(product); 
-                updateCartCount();
-                showMessage(`${product.name} added to your basket! Current items: ${cart.length}`, 'success');
-            } else { showMessage('Product not found. Please try again.', 'error'); }
-        }
-        
-        function createProductCardHTML(product) {
-            const errorPlaceholderUrl = `https://via.placeholder.com/400x300/e0ffec/37a552?text=${encodeURIComponent(product.name.replace(/\s/g, '+'))}`;
-
-            return `
-                <div class="product-card">
-                    <img src="${product.image}" alt="${product.name}" 
-                         onerror="this.onerror=null;this.src='${errorPlaceholderUrl}';"
-                         loading="lazy">
-                    
-                    <div class="card-content">
-                        <div class="card-header">
-                            <h3>${product.name}</h3>
-                            <span class="freshness-tag">${product.freshness}</span>
-                        </div>
-                        
-                        <p class="price-tag">
-                            ₹${parseFloat(product.price).toFixed(2)}
-                            <span class="unit">/${product.unit}</span>
-                        </p>
-                        
-                        <p class="seller-info">
-                            Seller: <span class="name">${product.farmer}</span>
-                        </p>
-
-                        <!-- Removed Check Freshness Button -->
-                        <button onclick="addToCart('${product.id}')" class="add-to-cart-btn">
-                            Add to Basket
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-
-        function renderProducts() {
-            if (products.length === 0) {
-                productGrid.innerHTML = noProductsMessage.outerHTML;
-                noProductsMessage.style.display = 'block';
-                noProductsMessage.textContent = "No products match your current filters. Try adjusting the price range or sorting options.";
-            } else {
-                noProductsMessage.style.display = 'none';
-                productGrid.innerHTML = products.map(createProductCardHTML).join('');
-            }
-        }
-
         // --- Global Access for HTML Buttons ---
         window.loginAs = loginAs;
-        window.closeMessage = closeMessage;
+        window.closeMessage = closeMessage; 
         window.closeLLMModal = closeLLMModal;
         window.optimizeListing = optimizeListing; 
         window.addToCart = addToCart;
@@ -1567,10 +1883,12 @@
         window.checkout = checkout; 
         window.createProductCardHTML = createProductCardHTML; 
         window.signOutUser = signOutUser; 
-        window.showLocationModal = showLocationModal; // FIX: Added missing function
+        window.showLocationModal = showLocationModal;
         window.autoDetectLocation = autoDetectLocation;
         window.manualSetLocation = manualSetLocation;
         window.closeLocationModal = closeLocationModal;
+        window.toggleChat = toggleChat; // Expose new chat toggle function
+        window.sendMessage = sendMessage; // Expose new chat send function
 
         // --- Initialization on Load ---
         window.onload = initApp;
@@ -1578,4 +1896,3 @@
 
 </body>
 </html>
-
