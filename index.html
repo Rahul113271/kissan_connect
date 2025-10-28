@@ -16,6 +16,8 @@
             --color-text-dark: #1f2937;
             --color-chat-user: #e0f2f1; /* Teal 50 for user */
             --color-chat-gemini: #f3f4f6; /* Gray 100 for AI */
+            --color-danger: #ef4444; /* Red */
+            --color-danger-dark: #dc2626; 
         }
         body { 
             font-family: 'Inter', sans-serif; 
@@ -172,7 +174,7 @@
 
         /* Sign Out Button Style */
         .signout-btn {
-            background-color: #ef4444; /* Red */
+            background-color: var(--color-danger); 
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 9999px;
@@ -182,14 +184,14 @@
             transition: background-color 0.15s;
         }
         .signout-btn:hover {
-            background-color: #dc2626;
+            background-color: var(--color-danger-dark);
         }
         
         .nav-link { padding: 0.5rem 0.75rem; border-radius: 9999px; font-weight: 600; color: #4b5563; cursor: pointer; transition: background-color 0.15s, color 0.15s; display: flex; align-items: center; gap: 0.4rem; border: none; background: none;}
         .nav-link:hover { background-color: #f3f4f6; color: var(--color-primary-dark); }
         #cartButton { padding: 0.5rem; background-color: #d1fae5; color: var(--color-primary-dark); border-radius: 9999px; transition: background-color 0.15s; position: relative; border: none; cursor: pointer; }
         #cartButton:hover { background-color: #a7f3d0; }
-        #cartCounter { position: absolute; top: -4px; right: -4px; background-color: #ef4444; color: white; font-size: 0.75rem; font-weight: 700; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+        #cartCounter { position: absolute; top: -4px; right: -4px; background-color: var(--color-danger); color: white; font-size: 0.75rem; font-weight: 700; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
 
         /* 5. Customer Market Hero */
         .hero-section { background-color: var(--color-primary-dark); color: white; padding: 5rem 0; text-align: center; }
@@ -210,7 +212,7 @@
         #filterBar .filter-group { display: flex; flex-direction: column; gap: 0.5rem; }
         #filterBar label { font-weight: 600; color: var(--color-primary-dark); }
         #filterBar input[type="range"], #filterBar select { width: 100%; padding: 0.5rem; border: 1px solid #d1fae5; border-radius: 0.5rem; box-sizing: border-box; background-color: white; }
-        #priceRangeValue { font-weight: 700; color: #ef4444; }
+        #priceRangeValue { font-weight: 700; color: var(--color-danger); }
         @media (min-width: 768px) { #filterBar { flex-direction: row; justify-content: space-between; align-items: center; gap: 2rem; } #filterBar .filter-group { flex-direction: row; align-items: center; gap: 1rem; } #filterBar input[type="range"], #filterBar select { width: auto; min-width: 150px; } }
         #productGrid { display: grid; gap: 2rem; grid-template-columns: repeat(1, 1fr); }
         @media (min-width: 640px) { #productGrid { grid-template-columns: repeat(2, 1fr); } }
@@ -241,42 +243,35 @@
         /* 8. Modals */
         .modal-backdrop { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 50; }
         .modal-content { background-color: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); max-width: 24rem; width: 90%; transform: scale(0.95); opacity: 0; transition: transform 0.3s, opacity 0.3s; }
-        /* Removed #llmModal CSS */
         .modal-btn { width: 100%; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; color: white; transition: background-color 0.15s; }
         .modal-btn.success { background-color: var(--color-primary-dark); }
         .modal-btn.llm-close { background-color: var(--color-secondary); }
+        .modal-btn.cancel { background-color: #9ca3af; margin-top: 0.5rem; } 
+
 
         /* Location Modal Specific Styles */
         #locationModalContent { max-width: 400px; }
-        #locationModalContent .option-card {
-            border: 1px solid #d1fae5;
-            padding: 1rem;
-            margin-bottom: 0.75rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: background-color 0.15s;
-        }
-        #locationModalContent .option-card:hover {
-            background-color: #f0fff4;
-        }
-        #manualLocationInput {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #d1fae5;
-            border-radius: 0.5rem;
-            box-sizing: border-box;
-            margin-top: 0.5rem;
-        }
-        .set-location-btn {
-            background-color: #2563eb;
-            color: white;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 0.5rem;
-        }
+        #locationModalContent .option-card { border: 1px solid #d1fae5; padding: 1rem; margin-bottom: 0.75rem; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.15s; }
+        #locationModalContent .option-card:hover { background-color: #f0fff4; }
+        #manualLocationInput { width: 100%; padding: 0.75rem; border: 1px solid #d1fae5; border-radius: 0.5rem; box-sizing: border-box; margin-top: 0.5rem; }
+        .set-location-btn { background-color: #2563eb; color: white; padding: 0.75rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; margin-top: 0.5rem; }
+
+        /* Login Form Modal Styles */
+        #loginFormModalContent { max-width: 450px; }
+        #loginFormModalContent h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; text-align: center; }
+        #loginForm label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+        #loginForm input { width: 100%; padding: 0.75rem; border: 1px solid #d1fae5; border-radius: 0.5rem; box-sizing: border-box; margin-bottom: 1rem; }
+        #loginForm button[type="submit"] { background-color: var(--color-primary-dark); color: white; width: 100%; padding: 0.75rem; border: none; border-radius: 0.5rem; font-weight: 700; cursor: pointer; margin-top: 0.5rem; }
+        #registerLink { display: block; text-align: center; margin-top: 1.5rem; font-size: 0.875rem; color: #4b5563; }
+        #registerLink a { color: var(--color-primary-dark); font-weight: 600; text-decoration: none; }
+        #registerLink a:hover { text-decoration: underline; }
+
+        /* Edit Product Modal Styles */
+        #editProductModalContent { max-width: 600px; }
+        #editProductForm .form-group { margin-bottom: 1rem; }
+        #editProductForm label { display: block; font-weight: 600; margin-bottom: 0.25rem; color: #059669; }
+        #editProductForm input, #editProductForm select { width: 100%; padding: 0.75rem; border: 1px solid #d1fae5; border-radius: 0.5rem; box-sizing: border-box; }
+        #editProductForm button[type="submit"] { background-color: #facc15; color: #064e3b; width: 100%; margin-top: 1rem; }
 
 
         /* 9. Farmer View */
@@ -288,10 +283,15 @@
         .submit-btn { width: 100%; background-color: #facc15; color: #064e3b; font-weight: 700; padding: 0.75rem; border-radius: 9999px; border: none; cursor: pointer; margin-top: 1.5rem; }
         #myListingsContainer { display: grid; gap: 1.5rem; grid-template-columns: repeat(1, 1fr); margin-top: 2rem; }
         @media (min-width: 640px) { #myListingsContainer { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { #myListingsContainer { grid-template-columns: repeat(3, 1fr); } } 
         .listing-card { background-color: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border: 1px solid #d1fae5; display: flex; flex-direction: column; justify-content: space-between; }
         .listing-card h4 { font-size: 1.125rem; font-weight: 700; color: #1f2937; margin-bottom: 0.5rem; }
-        .delete-btn { background-color: #ef4444; color: white; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; margin-top: 1rem; }
-        .optimize-btn { background-color: #facc15; color: #064e3b; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; margin-top: 0.5rem; }
+        .listing-card .listing-details { margin-bottom: 1rem; } 
+        .listing-card .listing-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: auto; } 
+        .delete-btn { background-color: var(--color-danger); color: white; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; }
+        .edit-btn { background-color: #2563eb; color: white; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; } 
+        .optimize-btn { background-color: #facc15; color: #064e3b; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; grid-column: 1 / -1; margin-top: 0.5rem; } 
+
 
         /* 10. Cart View */
         #cartPage { padding: 4rem 1rem; min-height: 80vh; background-color: white; display: none; }
@@ -299,11 +299,16 @@
         .cart-layout { display: flex; flex-direction: column; gap: 2rem; }
         @media (min-width: 1024px) { .cart-layout { flex-direction: row; align-items: flex-start; } .cart-summary { width: 350px; min-width: 300px; } }
         #cartItemsList { flex-grow: 1; }
-        .cart-item { display: grid; grid-template-columns: 1fr 2fr 1fr 0.5fr; align-items: center; border-bottom: 1px solid #e5e7eb; padding: 1rem 0; }
+        .cart-item { display: grid; grid-template-columns: auto 1fr auto auto auto; align-items: center; border-bottom: 1px solid #e5e7eb; padding: 1rem 0; gap: 1rem; } 
         .cart-item:last-child { border-bottom: none; }
         .item-details { display: flex; align-items: center; gap: 1rem; }
         .item-details img { width: 60px; height: 60px; object-fit: cover; border-radius: 0.5rem; }
-        .remove-btn { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.5rem; }
+        .item-name-unit { font-size: 1rem; font-weight: 600; }
+        .item-price { font-size: 1rem; font-weight: 500; }
+        .quantity-controls { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .quantity-btn { background: none; border: 1px solid #ccc; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 1.25rem; line-height: 1; padding: 0; }
+        .quantity-display { font-weight: 700; min-width: 20px; text-align: center; }
+        .remove-btn { background: none; border: none; color: var(--color-danger); cursor: pointer; font-size: 1.5rem; }
         .cart-summary { background-color: #f9f9f9; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); width: 100%; }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px dashed #e5e7eb; font-size: 1rem; }
         .summary-row:last-of-type { border-bottom: none; margin-top: 1rem; padding-top: 1rem; font-size: 1.25rem; font-weight: 700; color: var(--color-primary-dark); }
@@ -319,149 +324,57 @@
         .order-card { background-color: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e5e7eb; }
         .order-header-card { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #d1fae5; padding-bottom: 0.75rem; margin-bottom: 0.75rem; }
         .order-id { font-size: 1rem; font-weight: 500; color: #6b7280; }
-        .order-status { font-weight: 700; font-size: 1.125rem; color: var(--color-primary-dark); }
-        .order-details-summary { display: flex; justify-content: space-between; margin-top: 0.5rem; }
-        .order-total { font-size: 1.25rem; font-weight: 800; color: #ef4444; }
+        .order-status { font-weight: 700; font-size: 1.125rem; } 
+        .order-status.processing { color: #f59e0b; } /* Yellow for processing */
+        .order-status.delivered { color: var(--color-primary-dark); } /* Green for delivered */
+        .order-status.cancelled { color: var(--color-danger); } /* Red for cancelled */
+
+        .order-details-summary { display: flex; justify-content: space-between; margin-top: 0.5rem; align-items: center; /* Align items vertically */ }
+        .order-total { font-size: 1.25rem; font-weight: 800; color: #1f2937; }
         .order-delivery { font-size: 0.875rem; font-weight: 600; color: #4b5563; }
         .order-item-list { margin-top: 1rem; padding: 0.5rem 0; border-top: 1px dashed #f3f4f6; }
+        /* NEW: Cancel Order Button Style */
+        .cancel-order-btn {
+            background-color: var(--color-danger);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background-color 0.15s;
+        }
+        .cancel-order-btn:hover {
+            background-color: var(--color-danger-dark);
+        }
+        .order-card-footer {
+             margin-top: 1rem; 
+             padding-top: 1rem; 
+             border-top: 1px solid #e5e7eb; 
+             display: flex; 
+             justify-content: flex-end; 
+         }
 
         /* 12. CHAT BOT STYLES */
-        #chatContainer {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
-        }
-
-        #chatToggleBtn {
-            background-color: var(--color-secondary);
-            color: white;
-            border: none;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        #chatToggleBtn:hover {
-            transform: scale(1.1);
-        }
-
-        #chatWindow {
-            position: absolute;
-            bottom: 80px; /* Above the toggle button */
-            right: 0;
-            width: 320px;
-            height: 400px;
-            background-color: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transform: translateY(100%); /* Start off-screen */
-            opacity: 0;
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-            pointer-events: none; /* Disable interaction until visible */
-        }
-
-        #chatWindow.open {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        #chatHeader {
-            background-color: var(--color-secondary);
-            color: white;
-            padding: 0.75rem 1rem;
-            font-weight: 600;
-            font-size: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        #chatMessages {
-            flex-grow: 1;
-            padding: 1rem;
-            overflow-y: auto;
-            background-color: #fcfcfc;
-        }
-
-        .chat-message {
-            margin-bottom: 0.75rem;
-            max-width: 85%;
-        }
-
-        .chat-message p {
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.5rem;
-            line-height: 1.4;
-            font-size: 0.9rem;
-            white-space: pre-wrap; /* Preserve line breaks in markdown output */
-        }
-
-        .user-message {
-            margin-left: auto;
-            text-align: right;
-        }
-        .user-message p {
-            background-color: var(--color-chat-user);
-            color: #064e3b;
-        }
-
-        .gemini-message {
-            margin-right: auto;
-            text-align: left;
-        }
-        .gemini-message p {
-            background-color: var(--color-chat-gemini);
-            color: var(--color-text-dark);
-            border: 1px solid #e5e7eb;
-        }
-
-        #chatInputContainer {
-            border-top: 1px solid #e5e7eb;
-            padding: 0.5rem;
-            display: flex;
-        }
-
-        #chatInput {
-            flex-grow: 1;
-            padding: 0.5rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.5rem;
-            margin-right: 0.5rem;
-        }
-
-        #chatSendBtn {
-            background-color: var(--color-primary-dark);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        #chatSendBtn:hover {
-            background-color: var(--color-primary);
-        }
-
-        .chat-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #8b5cf6;
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-        }
+        #chatContainer { position: fixed; bottom: 20px; right: 20px; z-index: 100; }
+        #chatToggleBtn { background-color: var(--color-secondary); color: white; border: none; width: 60px; height: 60px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); transition: transform 0.2s; display: flex; align-items: center; justify-content: center; }
+        #chatToggleBtn:hover { transform: scale(1.1); }
+        #chatWindow { position: absolute; bottom: 80px; right: 0; width: 320px; height: 400px; background-color: white; border-radius: 0.75rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); display: flex; flex-direction: column; overflow: hidden; transform: translateY(100%); opacity: 0; transition: transform 0.3s ease-out, opacity 0.3s ease-out; pointer-events: none; }
+        #chatWindow.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+        #chatHeader { background-color: var(--color-secondary); color: white; padding: 0.75rem 1rem; font-weight: 600; font-size: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        #chatMessages { flex-grow: 1; padding: 1rem; overflow-y: auto; background-color: #fcfcfc; }
+        .chat-message { margin-bottom: 0.75rem; max-width: 85%; }
+        .chat-message p { padding: 0.5rem 0.75rem; border-radius: 0.5rem; line-height: 1.4; font-size: 0.9rem; white-space: pre-wrap; }
+        .user-message { margin-left: auto; text-align: right; }
+        .user-message p { background-color: var(--color-chat-user); color: #064e3b; }
+        .gemini-message { margin-right: auto; text-align: left; }
+        .gemini-message p { background-color: var(--color-chat-gemini); color: var(--color-text-dark); border: 1px solid #e5e7eb; }
+        #chatInputContainer { border-top: 1px solid #e5e7eb; padding: 0.5rem; display: flex; }
+        #chatInput { flex-grow: 1; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; margin-right: 0.5rem; }
+        #chatSendBtn { background-color: var(--color-primary-dark); color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.2s; }
+        #chatSendBtn:hover { background-color: var(--color-primary); }
+        .chat-spinner { border: 4px solid rgba(0, 0, 0, 0.1); border-left-color: #8b5cf6; border-radius: 50%; width: 16px; height: 16px; animation: spin 1s linear infinite; margin-right: 8px; }
 
     </style>
 </head>
@@ -483,25 +396,87 @@
             
             <div class="role-grid">
                 
-                <button onclick="loginAs('customer')" class="role-card customer-card">
+                <button onclick="showLoginForm('customer')" class="role-card customer-card">
                     <div class="icon">🛒</div>
                     <h3>Customer</h3>
                     <p style="color: #4b5563; margin-top: 0.5rem;">Browse fresh produce and place orders.</p>
-                    <span>Start Shopping</span>
+                    <span>Log In / Sign Up</span>
                 </button>
 
-                <button onclick="loginAs('farmer')" class="role-card farmer-card">
+                <button onclick="showLoginForm('farmer')" class="role-card farmer-card">
                     <div class="icon">🧑‍🌾</div>
                     <h3>Farmer</h3>
                     <p style="color: #4b5563; margin-top: 0.5rem;">Manage listings and view order history.</p>
-                    <span>Manage Farm</span>
+                    <span>Log In / Sign Up</span>
                 </button>
                 
-                <!-- ADMIN ROLE REMOVED -->
             </div>
              <p id="authStatus" style="margin-top: 2rem; font-size: 0.875rem; color: #6b7280;">Authentication Ready (User ID: <span id="currentUserIdDisplay">Loading...</span>)</p>
         </div>
     </section>
+
+    <!-- NEW: Login Form Modal -->
+    <div id="loginFormModal" class="modal-backdrop">
+        <div class="modal-content" id="loginFormModalContent">
+            <h3 id="loginModalTitle">Login as Customer</h3>
+            <form id="loginForm" onsubmit="event.preventDefault(); handleLoginSubmit();">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required placeholder="e.g., user@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit">Log In</button>
+            </form>
+            <p id="registerLink">
+                Don't have an account? <a href="#" onclick="showRegisterMessage()">Register Here</a>
+            </p>
+            <button onclick="closeLoginForm()" class="modal-btn cancel">Cancel</button>
+        </div>
+    </div>
+
+    <!-- NEW: Edit Product Modal -->
+    <div id="editProductModal" class="modal-backdrop">
+        <div class="modal-content" id="editProductModalContent">
+            <h3>Edit Product Listing</h3>
+            <form id="editProductForm" onsubmit="event.preventDefault(); handleUpdateProduct();">
+                <input type="hidden" id="editProductId"> <!-- Hidden field to store product ID -->
+                <div class="form-group">
+                    <label for="editProductName">Product Name</label>
+                    <input type="text" id="editProductName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductPrice">Price (₹)</label>
+                    <input type="number" id="editProductPrice" required step="0.01">
+                </div>
+                <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label for="editProductUnit">Unit</label>
+                        <select id="editProductUnit" required>
+                            <option value="per kg">per kg</option>
+                            <option value="per bundle">per bundle</option>
+                            <option value="per piece">per piece</option>
+                            <option value="per dozen">per dozen</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="editProductFreshness">Freshness Status</label>
+                        <input type="text" id="editProductFreshness" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editProductImage">Image URL</label>
+                    <input type="url" id="editProductImage" placeholder="Keep blank to use existing">
+                </div>
+                
+                <button type="submit" class="modal-btn success">Update Product</button>
+                <button type="button" onclick="closeEditProductModal()" class="modal-btn cancel">Cancel</button>
+            </form>
+        </div>
+    </div>
+
 
     <!-- 2. MAIN APPLICATION CONTAINER -->
     <main id="mainApp">
@@ -577,7 +552,7 @@
                     <button type="submit" class="set-location-btn">Set Location</button>
                 </form>
 
-                <button onclick="closeLocationModal()" class="modal-btn" style="background-color: #9ca3af; margin-top: 1rem;">Cancel</button>
+                <button onclick="closeLocationModal()" class="modal-btn cancel">Cancel</button>
             </div>
         </div>
 
@@ -629,7 +604,7 @@
                         <div id="filterBar">
                             <div class="filter-group">
                                 <label for="priceRange">Max Price (₹):</label>
-                                <input type="range" id="priceRange" min="10" max="250" value="250" step="10" oninput="updatePriceValue(this.value); filterAndSortProducts();">
+                                <input type="range" id="priceRange" min="10" max="250" value="250" step="10" oninput="updatePriceValue(this.value); debouncedFilterAndSort();">
                                 <span id="priceRangeValue">₹250</span>
                             </div>
 
@@ -818,8 +793,10 @@
     <script type="module">
         // --- Firebase Imports (using CDN) ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"; // Added signOut
-        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // MODIFIED: Added Email/Password functions
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"; 
+        // MODIFIED: Added updateDoc for editing products AND cancelling orders
+        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, where, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"; 
         
         // --- Modal Utility Function ---
@@ -840,9 +817,9 @@
             
             if (type === 'error') {
                 modalTitle.textContent = 'Oops!';
-                modalTitle.style.color = '#ef4444'; // Red
-                modalBtn.style.backgroundColor = '#ef4444';
-            } else {
+                modalTitle.style.color = 'var(--color-danger)'; 
+                modalBtn.style.backgroundColor = 'var(--color-danger)';
+            } else { // 'success' or default
                 modalTitle.textContent = 'Success!';
                 modalTitle.style.color = 'var(--color-primary-dark)';
                 modalBtn.style.backgroundColor = 'var(--color-primary-dark)';
@@ -868,13 +845,13 @@
         let app = null, db = null, auth = null;
         let currentUserId = null;
         let currentUserRole = null;
-        let cart = []; 
+        let selectedRoleForLogin = null; // NEW: Store role before login form
+        let cart = []; // Now stores objects like { product: {...}, quantity: 1 }
         let products = []; 
         let rawProducts = []; 
         let farmerListings = []; 
         let orders = []; 
-        let chatHistory = []; // New array to hold conversation context
-        // New State for Location
+        let chatHistory = []; 
         let userLocation = { city: 'Unknown', coords: null };
 
 
@@ -924,16 +901,12 @@
         const footerUserId = document.getElementById('footerUserId');
         const customerView = document.getElementById('customerView');
         const farmerView = document.getElementById('farmerView');
-        // const adminView = document.getElementById('adminView'); // Removed
         const marketPage = document.getElementById('marketPage');
         const cartPage = document.getElementById('cartPage');
         const ordersPage = document.getElementById('ordersPage');
         const productGrid = document.getElementById('productGrid');
         const noProductsMessage = document.getElementById('noProductsMessage');
         const cartCounter = document.getElementById('cartCounter');
-        // const messageBox = document.getElementById('messageBox'); // Already defined above
-        // const messageContent = document.getElementById('messageContent'); // Already defined above
-        // const messageText = document.getElementById('messageText'); // Already defined above
         const llmModal = document.getElementById('llmModal'); 
         const llmModalTitle = document.getElementById('llmModalTitle'); 
         const llmOutput = document.getElementById('llmOutput'); 
@@ -951,7 +924,6 @@
         const checkoutBtn = document.getElementById('checkoutBtn');
         const ordersList = document.getElementById('ordersList'); 
         const noOrdersMessage = document.getElementById('noOrdersMessage'); 
-        // New DOM elements for navigation added below in the script for correct targeting
         const ordersButton = document.getElementById('ordersButton');
         const cartContainer = document.getElementById('cartContainer');
         const locationText = document.getElementById('locationText');
@@ -963,6 +935,23 @@
         const chatWindow = document.getElementById('chatWindow');
         const chatMessages = document.getElementById('chatMessages');
         const chatInput = document.getElementById('chatInput');
+        
+        // Login Form Modal Elements
+        const loginFormModal = document.getElementById('loginFormModal');
+        const loginFormModalContent = document.getElementById('loginFormModalContent');
+        const loginModalTitle = document.getElementById('loginModalTitle');
+        const loginEmailInput = document.getElementById('loginEmail');
+        const loginPasswordInput = document.getElementById('loginPassword');
+
+        // Edit Product Modal Elements
+        const editProductModal = document.getElementById('editProductModal');
+        const editProductModalContent = document.getElementById('editProductModalContent');
+        const editProductIdInput = document.getElementById('editProductId');
+        const editProductNameInput = document.getElementById('editProductName');
+        const editProductPriceInput = document.getElementById('editProductPrice');
+        const editProductUnitSelect = document.getElementById('editProductUnit');
+        const editProductFreshnessInput = document.getElementById('editProductFreshness');
+        const editProductImageInput = document.getElementById('editProductImage');
 
 
         // --- Initialization and View Logic ---
@@ -971,66 +960,70 @@
             
             const isConfigValid = firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY_HERE";
 
-            if (isHostedEnvironment || isConfigValid) {
-                try {
-                    app = initializeApp(firebaseConfig);
-                    auth = getAuth(app);
-                    db = getFirestore(app);
-                    await authenticateUser();
-                } catch (error) {
-                    console.error("Firebase Initialization FAILED:", error);
-                    currentUserId = 'error-' + Math.random().toString(36).substring(2, 6);
-                    renderLoginView(false); 
+            // Initialize Firebase regardless of mode to check for existing logged-in user
+            try {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                
+                // Only initialize DB if config is valid (needed for listeners)
+                if (isHostedEnvironment || isConfigValid) {
+                     db = getFirestore(app);
+                } else {
+                     db = null; // Explicitly null in mock mode
                 }
-            } else {
-                // Mock mode fallback when no valid local config is provided
-                currentUserId = 'local-mock-' + Math.random().toString(36).substring(2, 9);
-                renderLoginView(false); 
+
+                // Check auth state AFTER initializing auth
+                await checkAuthState(); 
+
+            } catch (error) {
+                console.error("Firebase Initialization FAILED:", error);
+                currentUserId = 'error-' + Math.random().toString(36).substring(2, 6);
+                renderLoginView(false); // Render login view even if init fails
             }
             
-            // Start location detection regardless of auth/db status
-            // Now just initializes the default text, prompt is done on click
             locationText.textContent = 'Select Location';
         }
 
-        async function authenticateUser() {
-            // FIX: Use a simple listener/check and then attempt sign-in, but handle failure without crashing
+        // Renamed authenticateUser to checkAuthState for clarity
+        async function checkAuthState() {
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
+                    // User is already signed in (from a previous session or email/pass login)
                     currentUserId = user.uid;
-                    renderLoginView(true);
+                    // If we know the role (e.g., from local storage/session storage - not implemented yet),
+                    // we could go directly to main view. For now, always show login view if role is unknown.
+                    if (currentUserRole) { 
+                        renderView('main');
+                    } else {
+                        renderLoginView(true); // User logged in, but role needs selection
+                    }
                 } else {
-                    // If no user is signed in, attempt to sign in anonymously/via token
+                    // No user signed in, attempt anonymous sign-in for baseline ID
                     try {
-                        if (initialAuthToken) {
-                            await signInWithCustomToken(auth, initialAuthToken);
+                        // FIX: Attempt anonymous sign-in only if config seems valid
+                        if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY_HERE") {
+                            await signInAnonymously(auth);
+                            // If successful, onAuthStateChanged will run again with the user
                         } else {
-                            await signInAnonymously(auth); 
+                            throw new Error("Mock config or invalid key, skipping anonymous sign-in.");
                         }
+                        
                     } catch (e) {
-                        // CRITICAL FIX: If anonymous sign-in fails, we must manually terminate the DB connection 
-                        // attempt so listeners do not continue to fail and crash the app.
-                        console.error("Authentication failed, using anonymous fallback:", e);
-                        
-                        // Set auth/db to null if initialization failed, but only if we are not in the hosted Canvas environment
-                        if (!isHostedEnvironment) {
-                            db = null; 
-                            auth = null;
-                        }
-                        
-                        currentUserId = 'auth-fail-' + Math.random().toString(36).substring(2, 6);
-                        renderLoginView(false); // Render login view with status that DB is off
+                        console.warn("Anonymous sign-in attempt failed or skipped:", e.message);
+                        currentUserId = 'anon-fail-' + Math.random().toString(36).substring(2, 6);
+                        renderLoginView(false); // Show login, DB is likely off
                     }
                 }
             });
         }
+        
         
         function renderLoginView(isDatabaseConnected) {
             loadingIndicator.style.display = 'none';
             mainApp.style.display = 'none';
             chatContainer.style.display = 'none'; // Hide chat on login view
             loginView.style.display = 'flex';
-            currentUserIdDisplay.textContent = currentUserId;
+            currentUserIdDisplay.textContent = currentUserId || 'Not Signed In';
 
             const isConfigPlaceholder = localFirebaseConfig.apiKey === "YOUR_API_KEY_HERE";
 
@@ -1039,9 +1032,9 @@
                 authStatus.style.color = 'var(--color-primary-dark)';
             } else if (isConfigPlaceholder) {
                  authStatus.textContent = `Local Mock Mode (User ID: ${currentUserId}). Database is OFF. (PASTE YOUR FIREBASE CONFIG to enable persistence)`;
-                 authStatus.style.color = '#ef4444'; // Red for critical alert
+                 authStatus.style.color = 'var(--color-danger)'; // Red for critical alert
             } else {
-                // This path is hit when custom config is present but connection still failed (e.g., Auth/Rules failure)
+                // Config present but connection failed (Auth/Rules failure)
                 authStatus.textContent = `Local Mock Mode (User ID: ${currentUserId}). Database is OFF. (Check Firebase rules/network.)`;
                 authStatus.style.color = '#f59e0b';
             }
@@ -1089,10 +1082,13 @@
                     farmerIdDisplay.textContent = currentUserId;
                     setupFarmerListingsListener(); 
                 } 
-            } else { 
+            } else { // 'login' view
                 mainApp.style.display = 'none';
                 chatContainer.style.display = 'none'; 
                 loginView.style.display = 'flex';
+                // Reset role state when returning to login
+                currentUserRole = null;
+                selectedRoleForLogin = null;
             }
         }
         
@@ -1106,45 +1102,115 @@
                 renderCartPage(); 
             } else if (page === 'orders') {
                 ordersPage.style.display = 'block';
-            } else {
+            } else { // default to market
                 marketPage.style.display = 'block';
             }
         }
 
 
-        function loginAs(role) {
-            // Enforce only customer or farmer
-            if (role !== 'customer' && role !== 'farmer') {
-                 showMessage("Invalid role selected. Please choose Customer or Farmer.", 'error');
-                 return;
-            }
-            currentUserRole = role;
-            showMessage(`Welcome, ${role}! You are now logged in.`, 'success');
-            renderView('main');
+        // MODIFIED: This function now just shows the login form modal
+        function showLoginForm(role) {
+            if (role !== 'customer' && role !== 'farmer') return;
+            selectedRoleForLogin = role; // Store the selected role
+            
+            // Update modal title
+            loginModalTitle.textContent = `Login as ${role.charAt(0).toUpperCase() + role.slice(1)}`;
+            
+            // Clear previous inputs
+            loginEmailInput.value = '';
+            loginPasswordInput.value = '';
+            
+            // Show the modal
+            loginFormModal.style.display = 'flex';
+            setTimeout(() => {
+                loginFormModalContent.style.transform = 'scale(1)';
+                loginFormModalContent.style.opacity = '1';
+            }, 50);
         }
+
+        function closeLoginForm() {
+            loginFormModalContent.style.transform = 'scale(0.95)';
+            loginFormModalContent.style.opacity = '0';
+            setTimeout(() => { loginFormModal.style.display = 'none'; }, 300);
+            selectedRoleForLogin = null; // Clear selected role on cancel
+        }
+
+        // NEW: Handle login form submission (Now uses Firebase Auth)
+        async function handleLoginSubmit() {
+            const email = loginEmailInput.value;
+            const password = loginPasswordInput.value;
+            
+            // --- START REAL FIREBASE LOGIN ---
+            if (!auth) {
+                showMessage("Authentication service is not ready. Please try again.", 'error');
+                return;
+            }
+
+            try {
+                // Attempt to sign in with Firebase
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // --- Login Successful ---
+                currentUserRole = selectedRoleForLogin; // Set the role selected *before* login
+                currentUserId = user.uid; // Set the actual user ID from Firebase
+                
+                closeLoginForm();
+                showMessage(`Welcome back! Logged in as ${currentUserRole}.`, 'success');
+                renderView('main'); // Proceed to the main application view
+
+            } catch (error) {
+                // --- Login Failed ---
+                console.error("Firebase Login Error:", error.code, error.message);
+                let errorMessage = "Login failed. Please check your email and password.";
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                    errorMessage = "Invalid email or password provided.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "Please enter a valid email address.";
+                }
+                // Add more specific error handling as needed
+                
+                showMessage(errorMessage, 'error');
+            }
+            // --- END REAL FIREBASE LOGIN ---
+        }
+        
+        // NEW: Placeholder for Register link click
+        function showRegisterMessage() {
+            showMessage("Registration is not yet implemented in this demo. Please contact the admin to create an account.", 'error');
+        }
+
 
         // --- SIGN OUT LOGIC ---
         function signOutUser() {
-            if (auth) {
-                // Attempt Firebase sign out (only useful if signed in with a real account)
+            if (auth && auth.currentUser) {
+                // Sign out the current user (whether anonymous or email/pass)
                 signOut(auth).then(() => {
                     console.log("[Auth] User signed out.");
+                    // Reset all state variables
+                    currentUserId = null; 
+                    currentUserRole = null;
+                    selectedRoleForLogin = null;
+                    cart = []; 
+                    products = []; 
+                    rawProducts = []; 
+                    farmerListings = []; 
+                    orders = []; 
+                    chatHistory = [];
+                    updateCartCount();
+                    renderView('login'); // Go back to the login/role selection view
                 }).catch((error) => {
                     console.error("[Auth] Error signing out:", error);
+                    showMessage("Error signing out. Please try again.", 'error');
                 });
+            } else {
+                 // If auth object doesn't exist, just reset state
+                 currentUserId = null; 
+                 currentUserRole = null;
+                 cart = []; products = []; rawProducts = []; farmerListings = []; orders = []; 
+                 updateCartCount();
+                 renderView('login'); 
             }
-            
-            // Clear local state
-            currentUserRole = null;
-            cart = []; 
-            products = []; 
-            rawProducts = []; 
-            farmerListings = []; 
-            orders = []; 
-            updateCartCount();
-
-            // Re-render to login view and force re-initialization
-            window.onload();
         }
 
 
@@ -1237,20 +1303,23 @@
 
         // Renamed getLocation to autoDetectLocation for clarity
         function autoDetectLocation() {
-             if (navigator.geolocation) {
-                locationText.textContent = 'Detecting...';
-                // This call triggers the browser's permission prompt.
-                navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError, {
-                    enableHighAccuracy: true,
-                    timeout: 5000,
-                    maximumAge: 0
-                });
-            } else {
-                closeLocationModal();
-                userLocation.city = 'Geo Not Supported';
-                locationText.textContent = 'Geo Not Supported';
-                showMessage('Your browser does not support Geolocation.', 'error');
-            }
+            // FIX: Added small timeout to help browsers process the click/permission
+            setTimeout(() => {
+                if (navigator.geolocation) {
+                    locationText.textContent = 'Detecting...';
+                    // This call triggers the browser's permission prompt.
+                    navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError, {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    });
+                } else {
+                    closeLocationModal();
+                    userLocation.city = 'Geo Not Supported';
+                    locationText.textContent = 'Geo Not Supported';
+                    showMessage('Your browser does not support Geolocation.', 'error');
+                }
+            }, 50); // 50ms delay
         }
 
 
@@ -1270,8 +1339,7 @@
 
         function updatePriceValue(value) {
             priceRangeValueDisplay.textContent = `₹${value}`;
-            // Changed input handler to call the debounced function
-            debouncedFilterAndSort(); 
+            // The oninput handler now calls debouncedFilterAndSort()
         }
         
         function filterAndSortProducts() {
@@ -1287,7 +1355,11 @@
                     case 'price_asc': return a.price - b.price;
                     case 'price_desc': return b.price - a.price;
                     case 'name_asc': return a.name.localeCompare(b.name);
-                    case 'timestamp_desc': return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+                    case 'timestamp_desc': 
+                        // Fallback for missing timestamps
+                        const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+                        const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+                        return timeB - timeA;
                     default: return 0;
                 }
             });
@@ -1323,40 +1395,86 @@
         }
 
         function renderProducts() {
-            if (products.length === 0 && rawProducts.length === 0) {
-                noProductsMessage.textContent = "Loading market data...";
-            } else if (products.length === 0 && rawProducts.length > 0) {
-                noProductsMessage.textContent = "No products match your current filters (price/sort).";
-            } else {
-                noProductsMessage.style.display = 'none';
+            if (!productGrid) return; // Add check if element exists
+            
+            // Clear previous grid
+            productGrid.innerHTML = ''; 
 
+            if (products.length === 0 && rawProducts.length === 0) {
+                 productGrid.innerHTML = `<p style="text-align: center; color: #4b5563; grid-column: 1 / -1; padding-top: 3rem;" id="noProductsMessage">
+                                Loading products or no products found in the market...
+                            </p>`;
+            } else if (products.length === 0 && rawProducts.length > 0) {
+                 productGrid.innerHTML = `<p style="text-align: center; color: #4b5563; grid-column: 1 / -1; padding-top: 3rem;" id="noProductsMessage">
+                                No products match your current filters (price/sort).
+                            </p>`;
+            } else {
                 const html = products.map(createProductCardHTML).join('');
                 productGrid.innerHTML = html;
             }
         }
 
 
+        // MODIFIED: addToCart now handles quantity
         function addToCart(productId) {
-            const product = products.find(p => p.id === productId);
-            if (product) {
-                cart.push(product);
-                updateCartCount();
-                showMessage(`${product.name} added to basket!`, 'success');
+            const productToAdd = rawProducts.find(p => p.id === productId); 
+            if (!productToAdd) return; 
+
+            // Check if item already exists in cart
+            const existingCartItemIndex = cart.findIndex(item => item.product.id === productId);
+
+            if (existingCartItemIndex > -1) {
+                // Increment quantity
+                cart[existingCartItemIndex].quantity++;
+            } else {
+                // Add new item with quantity 1
+                cart.push({ product: productToAdd, quantity: 1 });
+            }
+            
+            updateCartCount();
+            showMessage(`${productToAdd.name} added to basket!`, 'success');
+            // Re-render cart if it's currently visible
+            if (cartPage.style.display === 'block') {
+                renderCartPage();
             }
         }
-        // ... (end of addToCart)
+
+        // NEW: Function to update item quantity in cart
+        function updateCartQuantity(productId, change) {
+            const cartItemIndex = cart.findIndex(item => item.product.id === productId);
+            if (cartItemIndex === -1) return; // Item not found
+
+            const newQuantity = cart[cartItemIndex].quantity + change;
+
+            if (newQuantity <= 0) {
+                // Remove item if quantity drops to 0 or below
+                removeFromCart(cartItemIndex); // Use index directly
+            } else {
+                cart[cartItemIndex].quantity = newQuantity;
+                renderCartPage(); // Re-render cart to show updated quantity and totals
+            }
+        }
+
+        // MODIFIED: removeFromCart now uses index and updates UI
+        function removeFromCart(index) {
+            if (index < 0 || index >= cart.length) return; // Invalid index
+            const name = cart[index].product.name;
+            cart.splice(index, 1);
+            showMessage(`${name} removed from basket.`, 'error');
+            renderCartPage(); // Re-render cart after removal
+        }
 
 
         function setupProductListener() {
-            if (!db) {
-                noProductsMessage.textContent = "Cannot load market data: Running in local mock mode.";
-                rawProducts = [
-                    { id: 'mock1', name: 'Organic Tomatoes', price: 65.00, unit: 'per kg', farmer: 'Mock Farm', image: 'https://via.placeholder.com/400x250/f0fdf4/16a34a?text=Tomatoes', freshness: 'Harvested Today', timestamp: new Date().toISOString() },
-                    { id: 'mock2', name: 'Fresh Spinach', price: 20.00, unit: 'per bundle', farmer: 'Mock Farm', image: 'https://via.placeholder.com/400x250/f0fdf4/16a34a?text=Spinach', freshness: 'Morning Pick', timestamp: new Date(Date.now() - 3600000).toISOString() }, 
-                    { id: 'mock3', name: 'Milk', price: 80.00, unit: 'per kg', farmer: 'Mock Farm', image: 'https://via.placeholder.com/400x250/f0fdf4/16a34a?text=Milk', freshness: 'New', timestamp: new Date(Date.now() - 600000).toISOString() }, 
-                    { id: 'mock4', name: 'Premium Cashews', price: 220.00, unit: 'per 250g', farmer: 'Mock Farm', image: 'https://via.placeholder.com/400x250/f0fdf4/16a34a?text=Cashews', freshness: 'Premium', timestamp: new Date(Date.now() - 7200000).toISOString() } 
+             if (!db) {
+                 if(noProductsMessage) noProductsMessage.textContent = "Cannot load market data: Running in local mock mode.";
+                rawProducts = [ 
+                    { id: 'p1', name: 'Organic Tomatoes', price: 50.00, unit: 'per kg', farmer: 'Farmer ID: mock1...', image: 'https://via.placeholder.com/400x300/e0ffec/37a552?text=Tomatoes', freshness: 'Today', timestamp: new Date().toISOString() },
+                    { id: 'p2', name: 'Fresh Spinach', price: 30.00, unit: 'per bundle', farmer: 'Farmer ID: mock2...', image: 'https://via.placeholder.com/400x300/e0ffec/37a552?text=Spinach', freshness: 'Yesterday', timestamp: new Date(Date.now() - 86400000).toISOString() },
+                    { id: 'p3', name: 'Local Milk', price: 80.00, unit: 'per liter', farmer: 'Farmer ID: mock1...', image: 'https://via.placeholder.com/400x300/e0ffec/37a552?text=Milk', freshness: 'Today', timestamp: new Date().toISOString() }
                 ];
-                priceRangeInput.max = 250; priceRangeInput.value = 250; updatePriceValue(250);
+                priceRangeInput.min = 10; priceRangeInput.max = 250; priceRangeInput.value = 250; 
+                updatePriceValue(250); 
                 filterAndSortProducts(); 
                 return;
             }
@@ -1367,8 +1485,8 @@
                 const fetchedProducts = [];
                 let maxPrice = 0;
 
-                snapshot.forEach(doc => {
-                    const data = doc.data();
+                snapshot.forEach(doc => { 
+                     const data = doc.data();
                     const price = parseFloat(data.price);
                     
                     if (price > maxPrice) { maxPrice = price; }
@@ -1376,25 +1494,40 @@
                     const displayFarmerId = data.farmerId ? data.farmerId.substring(0, 8) + '...' : 'N/A';
 
                     fetchedProducts.push({
-                        id: doc.id, name: data.name, price: price, unit: data.unit,
-                        farmer: `Farmer ID: ${displayFarmerId}`, image: data.image, freshness: data.freshness,
-                        timestamp: data.timestamp 
+                        id: doc.id, 
+                        name: data.name, 
+                        price: price, 
+                        unit: data.unit,
+                        farmer: `Farmer ID: ${displayFarmerId}`, 
+                        image: data.image, 
+                        freshness: data.freshness,
+                        timestamp: data.timestamp || new Date(0).toISOString() // Fallback for old data
                     });
-                });
+                 });
                 
                 rawProducts = fetchedProducts;
                 
+                // Calculate max price and update slider
                 maxPrice = Math.ceil(maxPrice / 10) * 10;
-                priceRangeInput.max = maxPrice > 0 ? maxPrice : 250;
-                if (priceRangeInput.value > maxPrice) { priceRangeInput.value = maxPrice; }
+                const newMax = maxPrice > 0 ? maxPrice : 250; 
+                const currentValue = parseFloat(priceRangeInput.value);
                 
-                // Only call filter and sort ONCE when data updates to prevent thrashing
-                filterAndSortProducts();
-                console.log(`[Firestore] Updated product list. Total items: ${rawProducts.length}`);
+                priceRangeInput.max = newMax;
+                // FIX: Check if current value is the default or higher than the new max
+                if (currentValue === 250 || currentValue > newMax) { 
+                    priceRangeInput.value = newMax; 
+                }
+                
+                // Update the visual display
+                updatePriceValue(priceRangeInput.value); 
+                // Apply the filters
+                filterAndSortProducts(); 
 
-            }, (error) => {
+                console.log(`[Firestore] Updated product list. Total: ${rawProducts.length}. Max Price: ${newMax}`);
+
+            }, (error) => { 
                 console.error("Error listening to products:", error);
-                showMessage("Error loading market data. Try refreshing.", 'error');
+                if(noProductsMessage) noProductsMessage.textContent = "Error loading products. (Check Permissions)";
             });
         }
 
@@ -1404,7 +1537,7 @@
         // --- LLM FUNCTION FOR OPTIMIZATION ---
         async function optimizeListing(productId) {
             if (apiKey === "YOUR_GEMINI_API_KEY_HERE" && !isHostedEnvironment) {
-                showMessage("Gemini API Key is missing. Cannot optimize listing.", 'error');
+                renderMessage("The AI Assistant is not configured. Please add your Gemini API Key.", "gemini"); // Use renderMessage in chat
                 return;
             }
             
@@ -1439,59 +1572,129 @@
                     </div>
                 `;
             } catch (error) {
-                llmOutput.innerHTML = `<p style="color: #ef4444;">Error: Could not connect to AI service. Check your Gemini API key and network connection.</p>`;
+                llmOutput.innerHTML = `<p style="color: var(--color-danger);">Error: Could not connect to AI service. Check your Gemini API key and network connection.</p>`;
                 console.error("Gemini API Optimization Error:", error);
+            }
+        }
+        
+        // NEW: Function to open the edit modal
+        function showEditProductModal(productId) {
+            const product = farmerListings.find(p => p.id === productId);
+            if (!product) return;
+
+            // Pre-fill the form
+            editProductIdInput.value = product.id;
+            editProductNameInput.value = product.name;
+            editProductPriceInput.value = product.price.toFixed(2);
+            editProductUnitSelect.value = product.unit;
+            editProductFreshnessInput.value = product.freshness;
+            editProductImageInput.value = product.image || ''; // Use existing image or empty
+
+            // Show the modal
+            editProductModal.style.display = 'flex';
+            setTimeout(() => {
+                editProductModalContent.style.transform = 'scale(1)';
+                editProductModalContent.style.opacity = '1';
+            }, 50);
+        }
+
+        function closeEditProductModal() {
+            editProductModalContent.style.transform = 'scale(0.95)';
+            editProductModalContent.style.opacity = '0';
+            setTimeout(() => { editProductModal.style.display = 'none'; }, 300);
+        }
+
+        // NEW: Function to handle the product update submission
+        async function handleUpdateProduct() {
+            if (!db) { showMessage("Cannot update product. Database connection failed.", 'error'); return; }
+
+            const productId = editProductIdInput.value;
+            const updatedData = {
+                name: editProductNameInput.value,
+                price: parseFloat(editProductPriceInput.value).toFixed(2),
+                unit: editProductUnitSelect.value,
+                freshness: editProductFreshnessInput.value,
+                image: editProductImageInput.value || farmerListings.find(p => p.id === productId)?.image || '', // Keep old image if new one is blank
+                timestamp: new Date().toISOString() // Update timestamp on edit
+            };
+
+            if (!updatedData.name || isNaN(updatedData.price) || !updatedData.unit || !updatedData.freshness) {
+                showMessage("Please fill out all required fields.", 'error');
+                return;
+            }
+
+            try {
+                const productDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', productId);
+                await updateDoc(productDocRef, updatedData);
+                closeEditProductModal();
+                showMessage(`Product "${updatedData.name}" updated successfully!`, 'success');
+            } catch (e) {
+                console.error("Error updating product:", e);
+                showMessage("Failed to update product. Check console for details.", 'error');
             }
         }
         
         
         function setupFarmerListingsListener() {
-            if (!db) {
+             if (!db) { 
+                if(noFarmerListingsMessage) noFarmerListingsMessage.innerHTML = "Cannot load listings: Running in local mock mode.";
                 farmerListings = [
-                    { id: 'mockF1', name: 'Mock Cabbage', price: 30.00, unit: 'per kg', freshness: 'Mock Data', image: 'https://via.placeholder.com/60x60/e0ffec/37a552?text=Cabbage', farmerId: currentUserId },
-                    { id: 'mockF2', name: 'Mock Chillies', price: 95.00, unit: 'per bundle', freshness: 'Local Test', image: 'https://via.placeholder.com/60x60/e0ffec/37a552?text=Chillies', farmerId: currentUserId }
+                     { id: 'p-mock-1', name: 'Mock Item 1', price: 10.00, unit: 'per kg', freshness: 'Mock Today', farmerId: currentUserId },
+                     { id: 'p-mock-2', name: 'Mock Item 2', price: 25.00, unit: 'per bundle', freshness: 'Mock Yesterday', farmerId: currentUserId }
                 ];
                 renderFarmerListings();
-                return;
+                return; 
             }
 
             const productsCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
-            
-            onSnapshot(productsCollectionRef, (snapshot) => {
+            // FIX: Use query and where to filter by farmerId on the server
+            const farmerQuery = query(productsCollectionRef, where('farmerId', '==', currentUserId));
+
+            onSnapshot(farmerQuery, (snapshot) => { 
                 const fetchedListings = [];
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    if (data.farmerId === currentUserId) {
-                        fetchedListings.push({
-                            id: doc.id, name: data.name, price: parseFloat(data.price), unit: data.unit,
-                            freshness: data.freshness, image: data.image, farmerId: data.farmerId
-                        });
-                    }
+                    fetchedListings.push({
+                        id: doc.id, 
+                        name: data.name, 
+                        price: parseFloat(data.price), 
+                        unit: data.unit,
+                        freshness: data.freshness, 
+                        image: data.image, 
+                        farmerId: data.farmerId
+                    });
                 });
                 
                 farmerListings = fetchedListings;
                 renderFarmerListings();
-            }, (error) => {
+             }, 
+            (error) => { 
                 console.error("Error listening to farmer listings:", error);
-                showMessage("Error loading your listings.", 'error');
+                if(noFarmerListingsMessage) noFarmerListingsMessage.innerHTML = "Error loading your listings. (Check Permissions)";
             });
         }
         
+        // MODIFIED: renderFarmerListings to include Edit button
         function renderFarmerListings() {
+             if (!myListingsContainer) return; 
             if (farmerListings.length === 0) {
-                myListingsContainer.innerHTML = noFarmerListingsMessage.outerHTML;
+                 if(noFarmerListingsMessage) myListingsContainer.innerHTML = `<p id="noFarmerListings" style="grid-column: 1 / -1; text-align: center; color: #6b7280;">No products currently listed by you.</p>`;
             } else {
-                noFarmerListingsMessage.style.display = 'none';
+                // Sort listings by name for consistent order
+                farmerListings.sort((a, b) => a.name.localeCompare(b.name));
 
                 const html = farmerListings.map(p => `
                     <div class="listing-card">
-                        <div>
+                        <div class="listing-details">
                             <h4>${p.name}</h4>
                             <p>Price: ₹${p.price.toFixed(2)} / ${p.unit}</p>
                             <p>Freshness: ${p.freshness}</p>
                         </div>
+                        <div class="listing-buttons">
+                            <button onclick="showEditProductModal('${p.id}')" class="edit-btn">Edit</button> 
+                            <button onclick="deleteProduct('${p.id}', '${p.name}')" class="delete-btn">Delete</button>
+                        </div>
                         <button onclick="optimizeListing('${p.id}')" class="optimize-btn">✨ Optimize Listing</button>
-                        <button onclick="deleteProduct('${p.id}', '${p.name}')" class="delete-btn">Delete Listing</button>
                     </div>
                 `).join('');
                 
@@ -1500,59 +1703,71 @@
         }
         
         async function addProduct() {
-            if (currentUserRole !== 'farmer') { showMessage("Access Denied. Only Farmers can add products.", 'error'); return; }
+             const nameInput = document.getElementById('productName');
+             const priceInput = document.getElementById('productPrice');
+             const unitInput = document.getElementById('productUnit');
+             const freshnessInput = document.getElementById('productFreshness');
+             const imageInput = document.getElementById('productImage');
 
-            const name = document.getElementById('productName').value;
-            const price = parseFloat(document.getElementById('productPrice').value);
-            const unit = document.getElementById('productUnit').value;
-            const freshness = document.getElementById('productFreshness').value;
-            const image = document.getElementById('productImage').value || 'https://via.placeholder.com/400x300/e0ffec/37a552?text=Fresh+Produce';
+             if (!nameInput || !priceInput || !unitInput || !freshnessInput || !imageInput) {
+                 showMessage("Error: Form elements not found.", 'error');
+                 return;
+             }
+
+             const name = nameInput.value.trim();
+             const price = parseFloat(priceInput.value).toFixed(2);
+             const unit = unitInput.value;
+             const freshness = freshnessInput.value.trim();
+             const image = imageInput.value.trim() || `https://via.placeholder.com/400x300/e0ffec/37a552?text=${encodeURIComponent(name.replace(/\s/g, '+'))}`; // Use placeholder if empty
+
+
+            if (!name || isNaN(price) || !unit || !freshness) {
+                 showMessage("Please fill out all required product details.", 'error');
+                 return;
+             }
             
-            if (!name || isNaN(price) || !unit || !freshness) { showMessage("Please fill out all required product fields.", 'error'); return; }
-            
-            // --- Handle Mock/DB Failure Separately ---
             if (!db) { 
-                // Display the mock message immediately, then reset and exit.
                 showMessage(`Product "${name}" added to mock list, but NOT SAVED to database.`, 'error'); 
-                document.getElementById('addProductForm').reset(); 
+                 if(document.getElementById('addProductForm')) document.getElementById('addProductForm').reset(); 
                 return;
             }
-            // --- END FIX ---
 
-
-            const newProduct = {
-                farmerId: currentUserId, name, price: price.toFixed(2), unit, freshness, image,
-                timestamp: new Date().toISOString()
-            };
+            const newProduct = { 
+                 name: name, 
+                 price: price, 
+                 unit: unit, 
+                 freshness: freshness, 
+                 image: image, 
+                 farmerId: currentUserId, // Store the farmer's ID
+                 timestamp: new Date().toISOString() // Add a timestamp
+             };
 
             try {
                 const productsCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
                 await addDoc(productsCollectionRef, newProduct); 
-                
-                // --- FIX APPLIED HERE: Use setTimeout to ensure pop-up renders before function exits ---
-                setTimeout(() => {
-                    showMessage(`Product "${name}" successfully added! (Visible to all Customers)`, 'success');
+                // FIX: Added 50ms timeout to ensure modal displays reliably
+                setTimeout(() => { 
+                    showMessage(`Product "${name}" successfully added!`, 'success'); 
                 }, 50); 
-                // --- END FIX ---
-                
-                document.getElementById('addProductForm').reset(); 
-
-            } catch (e) {
-                console.error("Failed to save product to Firestore:", e);
-                showMessage("Error: Could not save product to database. Check network or console.", 'error');
-            }
+                 if(document.getElementById('addProductForm')) document.getElementById('addProductForm').reset(); 
+            } catch (e) { 
+                 console.error("Error adding product:", e);
+                 showMessage("Failed to add product. Check console for details.", 'error');
+             }
         }
 
+        // MODIFIED: Removed window.confirm() - Now deletes directly
         async function deleteProduct(productId, productName) {
             if (currentUserRole !== 'farmer') { showMessage("Access Denied. Only Farmers can delete their listings.", 'error'); return; }
             if (!db) { showMessage(`Cannot delete "${productName}". Database connection failed.`, 'error'); return; }
 
-            if (!window.confirm(`Are you sure you want to delete "${productName}"? This action cannot be undone.`)) { return; }
+            // Confirmation removed: Proceed directly with deletion
+            console.log(`Attempting to delete product: ${productId}`);
 
             try {
                 const productDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', productId);
                 await deleteDoc(productDocRef);
-                showMessage(`Listing "${productName}" successfully deleted.`, 'error'); 
+                showMessage(`Listing "${productName}" successfully deleted.`, 'error'); // Using 'error' style for red pop-up
             } catch (e) {
                 console.error("Failed to delete document:", e);
                 showMessage(`Error deleting listing for "${productName}".`, 'error');
@@ -1560,316 +1775,358 @@
         }
         
         // --- CART/ORDER LOGIC ---
+        // MODIFIED: calculateCartTotals now uses quantity
         function calculateCartTotals() {
-            const subtotal = cart.reduce((sum, item) => sum + parseFloat(item.price), 0);
+            const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.product.price) * item.quantity), 0);
             const taxRate = 0.05; 
             const tax = subtotal * taxRate;
             const grandTotal = subtotal + tax;
             return { subtotal, tax, grandTotal };
         }
 
-        function renderCartPage() {
+        // MODIFIED: renderCartPage now uses quantity and adds controls
+        function renderCartPage() { 
+             if (!cartItemsList) return; 
             updateCartCount();
             const totals = calculateCartTotals();
             
-            if (cart.length === 0) {
-                cartItemsList.innerHTML = `<p class="empty-cart-message">Your basket is currently empty. Start adding some fresh produce!</p>`;
-                checkoutBtn.disabled = true; checkoutBtn.style.opacity = 0.6;
-            } else {
-                checkoutBtn.disabled = false; checkoutBtn.style.opacity = 1;
+             if (cart.length === 0) { 
+                 cartItemsList.innerHTML = `<p class="empty-cart-message">Your basket is currently empty.</p>`;
+                 if(checkoutBtn) { checkoutBtn.disabled = true; checkoutBtn.style.opacity = 0.6; }
+             } else { 
+                 if(checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.style.opacity = 1; }
                 
-                const html = cart.map((item, index) => `
-                    <div class="cart-item">
-                        <div class="item-details">
-                            <img src="${item.image}" alt="${item.name}" style="height: 60px; width: 60px; object-fit: cover; border-radius: 0.5rem;"
-                                 onerror="this.onerror=null;this.src='https://via.placeholder.com/60x60/e0ffec/37a552?text=Item';">
-                            <p>${item.name}</p>
+                const html = cart.map((item, index) => {
+                    const product = item.product;
+                    const itemTotalPrice = (parseFloat(product.price) * item.quantity).toFixed(2);
+                    return `
+                        <div class="cart-item">
+                            <div class="item-details">
+                                <img src="${product.image}" alt="${product.name}" 
+                                     onerror="this.onerror=null;this.src='https://via.placeholder.com/60x60/e0ffec/37a552?text=Item';">
+                            </div>
+                            <p class="item-name-unit">${product.name}<br><small>(${product.unit})</small></p>
+                            <p class="item-price">₹${itemTotalPrice}</p>
+                            <div class="quantity-controls">
+                                <button onclick="updateCartQuantity('${product.id}', -1)" class="quantity-btn">-</button>
+                                <span class="quantity-display">${item.quantity}</span>
+                                <button onclick="updateCartQuantity('${product.id}', 1)" class="quantity-btn">+</button>
+                            </div>
+                            <button onclick="removeFromCart(${index})" class="remove-btn" title="Remove Item">&times;</button>
                         </div>
-                        <p>₹${parseFloat(item.price).toFixed(2)} / ${item.unit}</p>
-                        <p>1</p>
-                        <button onclick="removeFromCart(${index})" class="remove-btn" title="Remove Item">&times;</button>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
                 
                 cartItemsList.innerHTML = `
-                    <div class="cart-item" style="font-weight: 700; border-bottom: 2px solid var(--color-primary-dark); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
-                        <p>Product</p><p>Price</p><p>Qty</p><p>Remove</p>
+                    <div class="cart-item" style="font-weight: 700; border-bottom: 2px solid var(--color-primary-dark); padding-bottom: 0.5rem; margin-bottom: 0.5rem; grid-template-columns: auto 1fr auto auto auto;">
+                        <p>Item</p><p>Product</p><p>Total Price</p><p>Quantity</p><p>Remove</p>
                     </div>
                     ${html}
                 `;
-            }
-            
-            cartSubtotalDisplay.textContent = `₹${totals.subtotal.toFixed(2)}`;
-            cartTaxDisplay.textContent = `₹${totals.tax.toFixed(2)}`;
-            cartGrandTotalDisplay.textContent = `₹${totals.grandTotal.toFixed(2)}`;
+             }
+             if(cartSubtotalDisplay) cartSubtotalDisplay.textContent = `₹${totals.subtotal.toFixed(2)}`;
+             if(cartTaxDisplay) cartTaxDisplay.textContent = `₹${totals.tax.toFixed(2)}`;
+             if(cartGrandTotalDisplay) cartGrandTotalDisplay.textContent = `₹${totals.grandTotal.toFixed(2)}`;
         }
         
-        function removeFromCart(index) {
-            const name = cart[index].name;
-            cart.splice(index, 1);
-            showMessage(`${name} removed from basket.`, 'error');
-            renderCartPage(); 
-        }
-        
-        async function checkout() {
-            if (cart.length === 0) { showMessage("Your cart is empty. Please add items before checking out.", 'error'); return; }
-            
+        // MODIFIED: checkout now includes quantities
+        async function checkout() { 
+            if (cart.length === 0) { /* As before */ return; }
             const totals = calculateCartTotals();
             
+            // Now includes quantity in the items array
             const orderDetails = {
                 userId: currentUserId,
-                items: cart.map(item => ({ id: item.id, name: item.name, price: item.price, unit: item.unit, farmerId: item.farmer.replace('Farmer ID: ', ''), image: item.image })),
-                subtotal: totals.subtotal.toFixed(2), tax: totals.tax.toFixed(2), grandTotal: totals.grandTotal.toFixed(2),
-                status: 'Processing', orderDate: new Date().toISOString(),
+                items: cart.map(item => ({ 
+                    id: item.product.id, 
+                    name: item.product.name, 
+                    price: item.product.price, 
+                    unit: item.product.unit, 
+                    quantity: item.quantity, // Added quantity
+                    farmerId: item.product.farmer.replace('Farmer ID: ', ''), 
+                    image: item.product.image 
+                })),
+                subtotal: totals.subtotal.toFixed(2), 
+                tax: totals.tax.toFixed(2), 
+                grandTotal: totals.grandTotal.toFixed(2),
+                status: 'Processing', 
+                orderDate: new Date().toISOString(),
                 deliveryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString() 
             };
             
-            if (db) {
-                try {
-                    const ordersCollectionRef = collection(db, 'artifacts', appId, 'users', currentUserId, 'orders');
-                    await addDoc(ordersCollectionRef, orderDetails);
-                    showMessage(`Order Placed! Total: ₹${totals.grandTotal.toFixed(2)}. Tracking details added to 'My Orders'.`, 'success');
-                } catch (e) {
-                    showMessage("Error: Could not save order details. Please check your network and database rules.", 'error');
-                }
-            } else {
-                showMessage(`Order Placed! (Local Mock Mode). Total: ₹${totals.grandTotal.toFixed(2)}.`, 'success');
-            }
+            if (db) { 
+                 try {
+                     const ordersCollectionRef = collection(db, 'artifacts', appId, 'users', currentUserId, 'orders');
+                     await addDoc(ordersCollectionRef, orderDetails);
+                     showMessage('Order placed successfully! Check your order history.', 'success');
+                 } catch (e) {
+                     console.error("Error saving order:", e);
+                     showMessage('Failed to place order. Please try again.', 'error');
+                 }
+             } else { 
+                 showMessage('Order Placed (Mock Mode - Not Saved)', 'success');
+             }
             
             cart = [];
             updateCartCount();
             toggleCustomerView('market');
         }
         
-        function updateCartCount() {
-            cartCounter.textContent = cart.length;
+        // MODIFIED: updateCartCount considers quantity
+        function updateCartCount() { 
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (cartCounter) cartCounter.textContent = totalItems;
         }
 
         // --- ORDER HISTORY LOGIC ---
         function setupOrderListener() {
-            if (!db) {
-                orders = [
-                    { id: 'MOCK-1', grandTotal: '150.50', status: 'Delivered', orderDate: new Date(Date.now() - 7*24*3600000).toISOString(), deliveryDate: new Date(Date.now() - 4*24*3600000).toISOString(), items: [{name: 'Tomatoes', price: 65, unit: 'per kg'}, {name: 'Milk', price: 80, unit: 'per kg'}] },
-                    { id: 'MOCK-2', grandTotal: '220.00', status: 'Shipped', orderDate: new Date(Date.now() - 2*24*3600000).toISOString(), deliveryDate: new Date(Date.now() + 1*24*3600000).toISOString(), items: [{name: 'Chillies', price: 110, unit: 'per bundle'}, {name: 'Spinach', price: 110, unit: 'per bundle'}] }
-                ];
-                renderOrders();
-                return;
+             if (!db) { 
+                if(noOrdersMessage) noOrdersMessage.innerHTML = "Cannot load order history: Running in local mock mode.";
+                return; 
             }
-            
             const ordersCollectionRef = collection(db, 'artifacts', appId, 'users', currentUserId, 'orders');
-            
-            onSnapshot(ordersCollectionRef, (snapshot) => {
-                orders = [];
-                snapshot.forEach(doc => { orders.push({ id: doc.id, ...doc.data() }); });
-
-                orders.sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
+            onSnapshot(ordersCollectionRef, (snapshot) => { 
+                const fetchedOrders = [];
+                snapshot.forEach(doc => {
+                    fetchedOrders.push({ id: doc.id, ...doc.data() });
+                });
+                // Sort orders by date, newest first
+                orders = fetchedOrders.sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
                 renderOrders();
-            }, (error) => {
-                console.error("Error listening to orders:", error);
-            });
+             }, 
+            (error) => { 
+                 console.error("Error listening to orders:", error);
+                 if(noOrdersMessage) noOrdersMessage.innerHTML = "Error loading order history. (Check Permissions)";
+             });
         }
         
+        // MODIFIED: renderOrders now includes Cancel Button
         function renderOrders() {
-            if (orders.length === 0) {
-                ordersList.innerHTML = noOrdersMessage.outerHTML;
-            } else {
-                noOrdersMessage.style.display = 'none';
-                
+             if (!ordersList) return; 
+             if (orders.length === 0) { 
+                 if(noOrdersMessage) ordersList.innerHTML = `<p id="noOrdersMessage" style="text-align: center; color: #4b5563; padding: 3rem;">
+                            You haven't placed any orders yet. Start shopping!
+                        </p>`;
+             } else { 
                 const html = orders.map(order => {
                     const orderDate = new Date(order.orderDate).toLocaleDateString();
                     const deliveryDate = new Date(order.deliveryDate).toLocaleDateString();
                     
+                    let statusClass = 'processing';
+                    if (order.status === 'Delivered') statusClass = 'delivered';
+                    if (order.status === 'Cancelled') statusClass = 'cancelled';
+                    
                     const deliveryInfo = order.status === 'Delivered' 
-                        ? `<span class="order-delivery" style="color: var(--color-primary-dark);">Delivered on: ${deliveryDate}</span>`
-                        : `<span class="order-delivery" style="color: #f59e0b;">Est. Delivery: ${deliveryDate}</span>`;
+                        ? `<span class="order-delivery">Delivered on: ${deliveryDate}</span>` 
+                        : (order.status === 'Cancelled' ? `<span class="order-delivery">Order Cancelled</span>` : `<span class="order-delivery">Est. Delivery: ${deliveryDate}</span>`); 
                         
-                    const itemList = order.items.map(item => `<p>${item.name} (₹${item.price} / ${item.unit})</p>`).join('');
+                    const itemList = order.items.map(item => `<p>${item.name} (Qty: ${item.quantity} x ₹${item.price} / ${item.unit})</p>`).join('');
+                    
+                    // Conditionally show Cancel button
+                    const cancelButton = order.status === 'Processing' 
+                        ? `<div class="order-card-footer">
+                               <button onclick="cancelOrder('${order.id}')" class="cancel-order-btn">Cancel Order</button>
+                           </div>` 
+                        : '';
                         
                     return `
-                        <div class="order-card">
-                            <div class="order-header-card">
-                                <span class="order-id">Order ID: ${order.id.substring(0, 8)}...</span>
-                                <span class="order-status">${order.status}</span>
-                            </div>
-                            <div class="order-details-summary">
-                                <span class="order-total">Total: ₹${order.grandTotal}</span>
-                                ${deliveryInfo}
-                            </div>
-                            <p style="font-size: 0.8rem; color: #6b7280; margin-top: 0.5rem;">Ordered on: ${orderDate}</p>
-                            <div class="order-item-list">
-                                <p style="font-weight: 700; color: #1f2937;">Items Purchased:</p>
-                                ${itemList}
-                            </div>
+                     <div class="order-card">
+                        <div class="order-header-card">
+                            <span class="order-id">Order ID: ${order.id.substring(0, 8)}...</span>
+                            <span class="order-status ${statusClass}">${order.status}</span> 
                         </div>
-                    `;
+                        <div class="order-details-summary">
+                            <span class="order-total">Total: ₹${order.grandTotal}</span>
+                            ${deliveryInfo}
+                        </div>
+                        <p style="font-size: 0.8rem; color: #6b7280; margin-top: 0.5rem;">Ordered on: ${orderDate}</p>
+                        <div class="order-item-list">
+                            <p style="font-weight: 700; color: #1f2937;">Items Purchased:</p>
+                            ${itemList}
+                        </div>
+                        ${cancelButton} 
+                    </div>
+                    `; 
                 }).join('');
-                
                 ordersList.innerHTML = html;
+             }
+        }
+        
+        // NEW: Function to cancel an order
+        async function cancelOrder(orderId) {
+             if (!db) { showMessage("Cannot cancel order. Database connection failed.", 'error'); return; }
+             if (!currentUserId) { showMessage("User not logged in.", 'error'); return; }
+
+            console.log(`Attempting to cancel order: ${orderId}`);
+            try {
+                const orderDocRef = doc(db, 'artifacts', appId, 'users', currentUserId, 'orders', orderId);
+                await updateDoc(orderDocRef, {
+                    status: 'Cancelled' 
+                });
+                showMessage(`Order ${orderId.substring(0, 8)}... has been cancelled.`, 'success');
+                // The onSnapshot listener will automatically refresh the order list UI
+            } catch (e) {
+                console.error("Error cancelling order:", e);
+                showMessage("Failed to cancel the order. Please try again.", 'error');
             }
         }
 
+
         // --- Utility for API calls with Exponential Backoff (Gemini) ---
-        // NOTE: This function requires a valid Gemini API Key to work.
-        async function retryFetch(url, options, retries = 0) {
+        async function retryFetch(url, options = {}, retries = 0) {
+            const maxRetries = MAX_RETRIES;
+            const delay = Math.pow(2, retries) * 1000 + Math.random() * 1000; // Exponential backoff
             try {
                 const response = await fetch(url, options);
                 if (!response.ok) {
-                    if (response.status === 429 && retries < MAX_RETRIES) {
-                        const delay = Math.pow(2, retries) * 1000 + Math.random() * 1000;
+                    if (response.status === 429 && retries < maxRetries) { // Too Many Requests
+                        console.warn(`[API] Rate limited. Retrying in ${delay}ms... (Attempt ${retries + 1})`);
                         await new Promise(resolve => setTimeout(resolve, delay));
                         return retryFetch(url, options, retries + 1);
                     }
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                return response.json();
+                return await response.json();
             } catch (error) {
-                if (retries < MAX_RETRIES) {
-                    const delay = Math.pow(2, retries) * 1000 + Math.random() * 1000;
+                if (retries < maxRetries) {
+                    console.warn(`[API] Fetch error. Retrying in ${delay}ms... (Attempt ${retries + 1})`);
                     await new Promise(resolve => setTimeout(resolve, delay));
                     return retryFetch(url, options, retries + 1);
                 }
-                throw new Error("Failed to fetch from Gemini API after multiple retries.");
+                console.error(`[API] Fetch failed after ${maxRetries} attempts:`, error);
+                throw error;
             }
         }
-
+        
         // --- LLM Modal Functions (Generic for all LLM outputs) ---
         function showLLMModal(title, isLoading = true) {
-            llmModal.style.display = 'flex';
             llmModalTitle.innerHTML = `<span style="margin-right: 0.5rem;">✨</span> ${title}`;
+            llmOutput.innerHTML = ''; // Clear previous output
             
+            if (isLoading) {
+                llmLoading.style.display = 'flex';
+            } else {
+                llmLoading.style.display = 'none';
+            }
+            
+            llmModal.style.display = 'flex';
             setTimeout(() => {
-                document.getElementById('llmContent').style.transform = 'scale(1)';
-                document.getElementById('llmContent').style.opacity = '1';
+                llmContent.style.transform = 'scale(1)';
+                llmContent.style.opacity = '1';
             }, 50);
         }
 
         function closeLLMModal() {
-            document.getElementById('llmContent').style.transform = 'scale(0.95)';
-            document.getElementById('llmContent').style.opacity = '0';
+            llmContent.style.transform = 'scale(0.95)';
+            llmContent.style.opacity = '0';
             setTimeout(() => { llmModal.style.display = 'none'; }, 300);
         }
         
         function markdownToHtml(markdownText) {
+             // Simple converter for lists and bolding
             return markdownText
-                .replace(/^#\s*(.*)$/gm, '<h4 style="font-size: 1.25rem; font-weight: 700; color: #1f2937; margin: 0.5rem 0;">$1</h4>')
-                .replace(/^\*\s*(.*)$/gm, '<li>$1</li>') 
-                .replace(/^- (.*)$/gm, '<li>$1</li>') 
-                .replace(/^([0-9]+\.)\s*(.*)$/gm, '<p style="font-weight: 600; color: #8b5cf6;">$1</p><p style="margin-top: 0;">$2</p>') 
-                .replace(/\*\*(.*)\*\*/gm, '<strong>$1</strong>');
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                .replace(/^(?:\*|\-) (.*?)(?:\n|$)/gm, '<li>$1</li>') // List items (starts with * or -)
+                .replace(/(\<li\>.*?\<\/li\>)/gs, '<ul>$1</ul>') // Wrap lists
+                .replace(/\n/g, '<br>'); // Newlines to <br>
         }
         
         // --- CHAT BOT LOGIC ---
         let isChatOpen = false;
-
-        function toggleChat() {
+        function toggleChat() { 
             isChatOpen = !isChatOpen;
-            if (isChatOpen) {
-                chatWindow.classList.add('open');
-                chatInput.focus();
-                chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
-            } else {
-                chatWindow.classList.remove('open');
+            chatWindow.classList.toggle('open', isChatOpen);
+         }
+
+        function renderMessage(text, sender) {
+            const messageEl = document.createElement('div');
+            messageEl.classList.add('chat-message', `${sender}-message`);
+            messageEl.innerHTML = `<p>${markdownToHtmlChat(text)}</p>`;
+            chatMessages.appendChild(messageEl);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll
+        }
+        
+        function renderLoadingMessage() {
+            const loadingEl = document.createElement('div');
+            loadingEl.classList.add('chat-message', 'gemini-message');
+            loadingEl.id = 'chatLoading';
+            loadingEl.innerHTML = `<p style="display: flex; align-items: center;"><span class="chat-spinner"></span> Thinking...</p>`;
+            chatMessages.appendChild(loadingEl);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function removeLoadingMessage() {
+            const loadingEl = document.getElementById('chatLoading');
+            if (loadingEl) {
+                loadingEl.remove();
             }
         }
         
-        function renderMessage(text, sender) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('chat-message', sender === 'user' ? 'user-message' : 'gemini-message');
-            
-            // Basic formatting for Gemini output
-            const formattedText = sender === 'gemini' ? markdownToHtmlChat(text) : text;
-            messageDiv.innerHTML = `<p>${formattedText}</p>`;
-            
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function renderLoadingMessage() {
-            const loadingDiv = document.createElement('div');
-            loadingDiv.classList.add('chat-message', 'gemini-message');
-            loadingDiv.id = 'chatLoading';
-            loadingDiv.innerHTML = `<p style="display:flex; align-items:center;">
-                                        <span class="chat-spinner"></span> Thinking...
-                                    </p>`;
-            chatMessages.appendChild(loadingDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+        // Simplified markdown for chat (handles lists better)
+        function markdownToHtmlChat(text) {
+             // Ensure text is treated as a string
+            let safeText = String(text || ''); 
+            return safeText
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                .replace(/^(?:\*|\-) (.*?)(?:\n|$)/gm, '<li>$1</li>') // List items (starts with * or -)
+                .replace(/(\<li\>.*?\<\/li\>)/gs, '<ul style="padding-left: 1.2rem; margin-top: 0.5rem;">$1</ul>') // Wrap lists
+                .replace(/\n/g, '<br>'); // Newlines to <br>
         }
         
-        function removeLoadingMessage() {
-            const loading = document.getElementById('chatLoading');
-            if (loading) loading.remove();
-        }
-
-        function markdownToHtmlChat(markdownText) {
-            // Converts basic markdown to HTML for display in the chat window
-            return markdownText
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
-                .replace(/\n/g, '<br>') // Newlines
-                .replace(/^- (.*)$/gm, '<li style="margin-left: 1rem; list-style-type: disc;">$1</li>') // List items
-                .replace(/^\*\s*(.*)$/gm, '<li style="margin-left: 1rem; list-style-type: disc;">$1</li>'); // List items
-        }
-
-
         async function sendMessage() {
-            const userQuery = chatInput.value.trim();
-            if (!userQuery) return;
+            const message = chatInput.value.trim();
+            if (!message) return;
 
-            // --- Gemini API Key Check ---
-            if (!isHostedEnvironment && apiKey === "YOUR_GEMINI_API_KEY_HERE") {
-                renderMessage("Error: Gemini API Key is missing. Please set the apiKey variable in the script to enable the chat.", 'gemini');
+            // Check for API key before sending
+            // FIX: Check if API Key is the *exact* placeholder string
+            if (apiKey === "YOUR_GEMINI_API_KEY_HERE") { 
+                renderMessage("The AI chatbot is not configured. Please contact support (Missing API Key).", "gemini");
                 return;
             }
-            // --- End Check ---
 
-
-            renderMessage(userQuery, 'user');
+            renderMessage(message, 'user');
             chatInput.value = '';
             renderLoadingMessage();
-            
-            // Add user query to chat history
-            chatHistory.push({ role: "user", parts: [{ text: userQuery }] });
 
-            // Determine system instruction based on role
-            let systemPrompt = "";
-            if (currentUserRole === 'farmer') {
-                systemPrompt = `You are the KisanConnect Farm Business AI. Your goal is to help the farmer maximize their sales, improve product quality, and manage their listings. Your tone is helpful, professional, and advisory. Context: The user is a farmer using the KisanConnect app.`;
-            } else { // Customer
-                systemPrompt = `You are the KisanConnect Customer AI. Your role is to provide information on fresh produce, suggest meal ideas, answer questions about orders, and help with navigation. Your tone is friendly, welcoming, and informative. Context: The user is a customer using the KisanConnect app.`;
-            }
-            
-            const payload = { 
-                contents: chatHistory,
-                systemInstruction: { parts: [{ text: systemPrompt }] } 
+            // Update chat history for context
+            chatHistory.push({ role: "user", parts: [{ text: message }] });
+
+            const systemPrompt = currentUserRole === 'farmer' 
+                ? `You are the KisanConnect Farm Business AI. Your goal is to help the farmer maximize their sales, improve product quality, and manage their listings. Your tone is helpful, professional, and advisory. Context: The user is a farmer using the KisanConnect app. Keep responses concise.`
+                : `You are the KisanConnect Customer AI. Your goal is to help the customer find the best produce, get recipe ideas, and understand product freshness. Your tone is friendly, enthusiastic, and helpful. Context: The user is a customer using the KisanConnect app. Keep responses concise.`;
+
+            const payload = {
+                contents: chatHistory, // Send the whole history
+                systemInstruction: { parts: [{ text: systemPrompt }] }
             };
-            
-            try {
-                const response = await retryFetch(apiUrl, { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify(payload) 
-                });
-                
-                removeLoadingMessage();
-                
-                let generatedText = "Sorry, I couldn't process that request right now.";
-                if (response.candidates && response.candidates.length > 0 && response.candidates[0].content.parts[0].text) {
-                    generatedText = response.candidates[0].content.parts[0].text;
-                }
 
+            try {
+                const response = await retryFetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                removeLoadingMessage();
+                const generatedText = response.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't process that request.";
                 renderMessage(generatedText, 'gemini');
                 
-                // Add AI response to chat history
+                // Add the AI's response to the history
                 chatHistory.push({ role: "model", parts: [{ text: generatedText }] });
 
             } catch (error) {
                 removeLoadingMessage();
-                console.error("Chat API Error:", error);
-                renderMessage("A network error occurred. Please check your API key and connection.", 'gemini');
+                console.error("Gemini Chat Error:", error);
+                renderMessage("Sorry, I'm having trouble connecting to the AI service right now. Please check your API key and network connection.", 'gemini');
             }
         }
         
         // --- Global Access for HTML Buttons ---
-        window.loginAs = loginAs;
+        // Ensure all functions called by onclick are listed here
+        window.showLoginForm = showLoginForm; 
+        window.handleLoginSubmit = handleLoginSubmit; 
+        window.closeLoginForm = closeLoginForm;
+        window.showRegisterMessage = showRegisterMessage;
         window.closeMessage = closeMessage; 
         window.closeLLMModal = closeLLMModal;
         window.optimizeListing = optimizeListing; 
@@ -1887,8 +2144,14 @@
         window.autoDetectLocation = autoDetectLocation;
         window.manualSetLocation = manualSetLocation;
         window.closeLocationModal = closeLocationModal;
-        window.toggleChat = toggleChat; // Expose new chat toggle function
-        window.sendMessage = sendMessage; // Expose new chat send function
+        window.toggleChat = toggleChat; 
+        window.sendMessage = sendMessage; 
+        window.showEditProductModal = showEditProductModal; 
+        window.handleUpdateProduct = handleUpdateProduct; 
+        window.closeEditProductModal = closeEditProductModal; 
+        window.updateCartQuantity = updateCartQuantity; 
+        window.debouncedFilterAndSort = debouncedFilterAndSort; // Expose debounced function
+        window.cancelOrder = cancelOrder; // NEW: Expose cancelOrder function
 
         // --- Initialization on Load ---
         window.onload = initApp;
@@ -1896,3 +2159,4 @@
 
 </body>
 </html>
+
