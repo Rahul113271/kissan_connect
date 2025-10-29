@@ -19,6 +19,10 @@
             --color-danger: #ef4444; /* Red */
             --color-danger-dark: #dc2626; 
         }
+        /* NEW: Added box-sizing */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--color-background); 
@@ -26,6 +30,8 @@
             margin: 0; 
             padding: 0; 
             line-height: 1.5; 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         .container { 
             max-width: 1280px; 
@@ -47,59 +53,65 @@
         /* 3. LOGIN VIEW (Home Page) */
         #loginView { 
             min-height: 100vh; 
-            background-color: #ecfdf5; /* Light Green Background */
+            background-color: #ecfdf5; 
             display: none; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: center; /* Center content vertically */
+            justify-content: center; 
             padding: 2rem 1rem; 
         }
         
         .login-card {
             background-color: white;
-            padding: 3rem;
+            padding: 2rem; /* Reduced padding for mobile */
             border-radius: 1rem;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 1000px; /* Wider card */
+            max-width: 1000px; 
             text-align: center;
+        }
+        @media (min-width: 768px) {
+            .login-card { padding: 3rem; }
         }
 
         .login-card h1 {
-            font-size: 2.5rem;
+            font-size: 2rem; /* Responsive font size */
             font-weight: 800;
             color: var(--color-primary-dark);
             margin-bottom: 0.5rem;
+        }
+        @media (min-width: 768px) {
+            .login-card h1 { font-size: 2.5rem; }
         }
         
         .role-grid {
             display: grid;
             gap: 1.5rem;
             margin-top: 2rem;
-            /* Changed from 3fr to 2fr layout */
             grid-template-columns: repeat(1, 1fr); 
         }
 
         @media (min-width: 768px) {
-            /* 2 column layout on tablet/desktop */
             .role-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-        /* Style adjustments for a 2-column grid */
+        
         .role-card {
             padding: 1.5rem;
             border-radius: 0.75rem;
-            border: 2px solid #e5e7eb;
+            border: 1px solid #e5e7eb; /* Thinner border */
             background-color: #f9fafb;
             cursor: pointer;
             text-align: center;
-            box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.05);
+            /* Softer shadow */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
         }
         .role-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+            /* Enhanced hover shadow */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
             background-color: white;
         }
         .role-card h3 {
@@ -116,13 +128,16 @@
             font-weight: 600;
             color: white;
             border: none;
+            transition: transform 0.2s; /* Add transition to button */
+        }
+        .role-card:hover span {
+            transform: scale(1.05);
         }
         .role-card .icon {
              font-size: 3rem; 
              margin-bottom: 0.5rem;
         }
 
-        /* Role Button Specific Colors */
         .customer-card h3 { color: #2563eb; } 
         .customer-card span { background-color: #2563eb; }
         .customer-card .icon { color: #2563eb; }
@@ -131,8 +146,6 @@
         .farmer-card span { background-color: var(--color-primary-dark); }
         .farmer-card .icon { color: var(--color-primary-dark); }
         
-        /* Admin styles removed as role is not implemented */
-
         #authStatus {
             margin-top: 2rem;
             font-size: 0.9rem;
@@ -145,12 +158,29 @@
         /* 4. Main Application Layout */
         #mainApp { display: none; }
         header { background-color: white; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 50; }
-        header nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; flex-wrap: wrap; gap: 1rem;}
-        .logo { font-size: 1.875rem; font-weight: 800; color: var(--color-primary-dark); }
-        .nav-info { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        /* Responsive Header */
+        header nav { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 1rem; /* Use padding on nav */
+            flex-wrap: wrap; 
+            gap: 1rem;
+        }
+        @media (max-width: 768px) {
+            header nav {
+                flex-direction: column; /* Stack logo and nav-info */
+                align-items: center;
+                gap: 1rem;
+            }
+            .nav-info {
+                justify-content: center; /* Center nav items */
+            }
+        }
+        .logo { font-size: 1.875rem; font-weight: 800; color: var(--color-primary-dark); text-decoration: none; }
+        .nav-info { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
         #roleDisplay { font-size: 0.875rem; font-weight: 500; color: #4b5563; background-color: #f3f4f6; padding: 0.25rem 0.75rem; border-radius: 9999px; text-transform: capitalize; }
         
-        /* New Location Block Style */
         #locationBlock {
             display: flex;
             align-items: center;
@@ -163,13 +193,13 @@
             border-radius: 9999px;
             background-color: #f0fff4;
             cursor: pointer;
-            transition: background-color 0.15s;
+            transition: background-color 0.15s, box-shadow 0.15s;
         }
         #locationBlock:hover {
             background-color: #ecfdf5;
+            box-shadow: 0 0 0 2px var(--color-primary);
         }
 
-        /* Sign Out Button Style */
         .signout-btn {
             background-color: var(--color-danger); 
             color: white;
@@ -178,47 +208,72 @@
             font-weight: 600;
             cursor: pointer;
             border: none;
-            transition: background-color 0.15s;
+            transition: background-color 0.15s, transform 0.15s;
         }
         .signout-btn:hover {
             background-color: var(--color-danger-dark);
+            transform: scale(1.05);
         }
         
         .nav-link { padding: 0.5rem 0.75rem; border-radius: 9999px; font-weight: 600; color: #4b5563; cursor: pointer; transition: background-color 0.15s, color 0.15s; display: flex; align-items: center; gap: 0.4rem; border: none; background: none;}
         .nav-link:hover { background-color: #f3f4f6; color: var(--color-primary-dark); }
-        #cartButton { padding: 0.5rem; background-color: #d1fae5; color: var(--color-primary-dark); border-radius: 9999px; transition: background-color 0.15s; position: relative; border: none; cursor: pointer; }
-        #cartButton:hover { background-color: #a7f3d0; }
+        #cartButton { padding: 0.5rem; background-color: #d1fae5; color: var(--color-primary-dark); border-radius: 9999px; transition: background-color 0.15s, transform 0.15s; position: relative; border: none; cursor: pointer; }
+        #cartButton:hover { background-color: #a7f3d0; transform: scale(1.1); }
         #cartCounter { position: absolute; top: -4px; right: -4px; background-color: var(--color-danger); color: white; font-size: 0.75rem; font-weight: 700; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
 
         /* 5. Customer Market Hero */
-        .hero-section { background-color: var(--color-primary-dark); color: white; padding: 5rem 0; text-align: center; }
-        .hero-section h1 { font-size: 3rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.05em; }
-        .hero-section p { font-size: 1.25rem; font-weight: 300; margin-bottom: 2rem; max-width: 48rem; margin: 0 auto 2rem auto; }
+        .hero-section { background-color: var(--color-primary-dark); color: white; padding: 4rem 1rem; text-align: center; } /* Reduced padding for mobile */
+        @media (min-width: 768px) { .hero-section { padding: 5rem 1rem; } }
+        .hero-section h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.05em; }
+        @media (min-width: 640px) { .hero-section h1 { font-size: 3.75rem; } }
+        .hero-section p { font-size: 1.125rem; font-weight: 300; margin-bottom: 2rem; max-width: 48rem; margin: 0 auto 2rem auto; }
+        @media (min-width: 640px) { .hero-section p { font-size: 1.25rem; } }
         .hero-buttons { display: flex; flex-direction: column; justify-content: center; gap: 1rem; }
         .hero-buttons button { border: none; font-weight: 700; padding: 0.75rem 2rem; border-radius: 9999px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: background-color 0.3s, transform 0.3s; cursor: pointer; width: 100%; }
+        @media (min-width: 640px) { .hero-buttons { flex-direction: row; gap: 1rem; } .hero-buttons button { width: auto; } }
         .shop-btn { background-color: #facc15; color: #064e3b; }
         .shop-btn:hover { background-color: #eab308; transform: scale(1.05); }
-        .recipe-btn { background-color: var(--color-secondary); color: white; } /* Keep style for layout, but remove button */
+        .recipe-btn { background-color: var(--color-secondary); color: white; } 
         .recipe-btn:hover { background-color: #7c3aed; transform: scale(1.05); }
-        @media (min-width: 640px) { .hero-section h1 { font-size: 3.75rem; } .hero-buttons { flex-direction: row; gap: 1rem; } .hero-buttons button { width: auto; } }
         
         /* 6. Product Grid & Filter */
-        #products { padding: 4rem 0; background-color: white; }
-        #products h2 { font-size: 2.25rem; font-weight: 700; text-align: center; color: var(--color-text-dark); margin-bottom: 3rem; }
-        #filterBar { display: flex; flex-direction: column; gap: 1.5rem; padding: 1.5rem 1rem; margin-bottom: 2rem; background-color: #f0fff4; border-radius: 0.75rem; border: 1px solid #d1fae5; }
-        #filterBar .filter-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        #products { padding: 3rem 0; background-color: white; } /* Reduced padding */
+        @media (min-width: 768px) { #products { padding: 4rem 0; } }
+        #products h2 { font-size: 2rem; font-weight: 700; text-align: center; color: var(--color-text-dark); margin-bottom: 2rem; }
+        @media (min-width: 768px) { #products h2 { font-size: 2.25rem; } }
+        
+        /* Responsive Filter Bar */
+        #filterBar { display: flex; flex-direction: column; gap: 1rem; padding: 1.5rem 1rem; margin-bottom: 2rem; background-color: #f0fff4; border-radius: 0.75rem; border: 1px solid #d1fae5; }
+        #filterBar .filter-group { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; }
         #filterBar label { font-weight: 600; color: var(--color-primary-dark); }
         #filterBar input[type="range"], #filterBar select { width: 100%; padding: 0.5rem; border: 1px solid #d1fae5; border-radius: 0.5rem; box-sizing: border-box; background-color: white; }
         #priceRangeValue { font-weight: 700; color: var(--color-danger); }
-        @media (min-width: 768px) { #filterBar { flex-direction: row; justify-content: space-between; align-items: center; gap: 2rem; } #filterBar .filter-group { flex-direction: row; align-items: center; gap: 1rem; } #filterBar input[type="range"], #filterBar select { width: auto; min-width: 150px; } }
-        #productGrid { display: grid; gap: 2rem; grid-template-columns: repeat(1, 1fr); }
-        @media (min-width: 640px) { #productGrid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 1024px) { #productGrid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 768px) { 
+            #filterBar { flex-direction: row; justify-content: space-between; align-items: center; gap: 2rem; } 
+            #filterBar .filter-group { flex-direction: row; align-items: center; gap: 1rem; width: auto; } 
+            #filterBar input[type="range"], #filterBar select { width: auto; min-width: 150px; } 
+        }
+        
+        #productGrid { display: grid; gap: 1.5rem; grid-template-columns: repeat(1, 1fr); }
+        @media (min-width: 640px) { #productGrid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; } }
+        @media (min-width: 1024px) { #productGrid { grid-template-columns: repeat(3, 1fr); gap: 2rem; } }
         @media (min-width: 1280px) { #productGrid { grid-template-columns: repeat(4, 1fr); } }
 
         /* Product Card */
-        .product-card { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); overflow: hidden; border: 1px solid #f3f4f6; transition: box-shadow 0.3s; }
-        .product-card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .product-card { 
+            background-color: white; 
+            border-radius: 0.75rem; 
+            /* Softer shadow */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05); 
+            overflow: hidden; 
+            border: 1px solid #f3f4f6; 
+            transition: box-shadow 0.3s, transform 0.3s; 
+        }
+        .product-card:hover { 
+            /* Enhanced hover shadow */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); 
+            transform: translateY(-3px);
+        }
         .product-card img { width: 100%; height: 12rem; object-fit: cover; object-position: center; }
         .card-content { padding: 1.25rem; }
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
@@ -228,20 +283,52 @@
         .price-tag .unit { font-size: 0.875rem; font-weight: 400; color: #6b7280; }
         .seller-info { font-size: 0.875rem; color: #6b7280; margin-bottom: 0.25rem; }
         .location-info { font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem; font-weight: 500; }
-        .add-to-cart-btn { width: 100%; background-color: var(--color-primary-dark); color: white; padding: 0.75rem; border-radius: 0.75rem; border: none; font-weight: 600; font-size: 1.125rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); cursor: pointer; }
-        .add-to-cart-btn:hover { background-color: #047857; transform: scale(1.01); }
-        .optimize-btn.check-freshness { background-color: #2563eb; color: white; margin-bottom: 0.5rem; width: 100%; } /* Keep style for layout, but remove button */
+        .add-to-cart-btn { 
+            width: 100%; 
+            background-color: var(--color-primary-dark); 
+            color: white; 
+            padding: 0.75rem; 
+            border-radius: 0.75rem; 
+            border: none; 
+            font-weight: 600; 
+            font-size: 1.125rem; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); 
+            cursor: pointer; 
+            transition: background-color 0.15s, transform 0.15s;
+        }
+        .add-to-cart-btn:hover { background-color: #047857; transform: scale(1.02); }
+        .add-to-cart-btn:active { transform: scale(0.98); }
 
         /* 7. Footer */
-        footer { background-color: #1f2937; color: white; padding: 2.5rem 0; margin-top: 4rem; text-align: center; }
+        footer { background-color: #1f2937; color: white; padding: 2.5rem 1rem; margin-top: 4rem; text-align: center; }
         footer p { color: #9ca3af; margin-bottom: 1rem; }
         footer a { color: #9ca3af; text-decoration: none; transition: color 0.15s; margin: 0 0.75rem; }
         footer a:hover { color: #34d399; }
 
         /* 8. Modals */
-        .modal-backdrop { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 50; }
-        .modal-content { background-color: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); max-width: 24rem; width: 90%; transform: scale(0.95); opacity: 0; transition: transform 0.3s, opacity 0.3s; }
-        .modal-btn { width: 100%; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; color: white; transition: background-color 0.15s; }
+        .modal-backdrop { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 50; padding: 1rem; }
+        .modal-content { 
+            background-color: white; 
+            padding: 1.5rem; 
+            border-radius: 0.75rem; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); 
+            max-width: 24rem; 
+            width: 100%; /* Changed from 90% */
+            transform: scale(0.95); 
+            opacity: 0; 
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smoother transition */
+        }
+        .modal-btn { 
+            width: 100%; 
+            padding: 0.5rem; 
+            border-radius: 0.5rem; 
+            border: none; 
+            font-weight: 600; 
+            cursor: pointer; 
+            color: white; 
+            transition: background-color 0.15s, opacity 0.15s; 
+        }
+        .modal-btn:hover { opacity: 0.9; }
         .modal-btn.success { background-color: var(--color-primary-dark); }
         .modal-btn.llm-close { background-color: var(--color-secondary); }
         .modal-btn.cancel { background-color: #9ca3af; margin-top: 0.5rem; } 
@@ -249,25 +336,26 @@
 
         /* Location Modal Specific Styles */
         #locationModalContent { max-width: 400px; }
-        #locationModalContent .option-card { border: 1px solid #d1fae5; padding: 1rem; margin-bottom: 0.75rem; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.15s; }
-        #locationModalContent .option-card:hover { background-color: #f0fff4; }
+        #locationModalContent .option-card { border: 1px solid #d1fae5; padding: 1rem; margin-bottom: 0.75rem; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.15s, border-color 0.15s; }
+        #locationModalContent .option-card:hover { background-color: #f0fff4; border-color: var(--color-primary); }
         #manualLocationInput { width: 100%; padding: 0.75rem; border: 1px solid #d1fae5; border-radius: 0.5rem; box-sizing: border-box; margin-top: 0.5rem; }
         .set-location-btn { background-color: #2563eb; color: white; padding: 0.75rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; margin-top: 0.5rem; }
+        .set-location-btn:hover { background-color: #1d4ed8; }
 
         /* Login Form Modal Styles */
         #loginFormModalContent { max-width: 450px; }
-        #loginFormModalContent h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; text-align: center; }
-        /* NEW: Tab styles for login/register */
+        #loginFormModalContent h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; text-align: center; }
         .auth-tabs { display: flex; border-bottom: 1px solid #e5e7eb; margin-bottom: 1.5rem; }
-        .auth-tab { flex: 1; text-align: center; padding: 0.75rem 0.5rem; font-weight: 600; color: #6b7280; cursor: pointer; border-bottom: 3px solid transparent; }
+        .auth-tab { flex: 1; text-align: center; padding: 0.75rem 0.5rem; font-weight: 600; color: #6b7280; cursor: pointer; border-bottom: 3px solid transparent; transition: color 0.15s, border-color 0.15s; }
         .auth-tab.active { color: var(--color-primary-dark); border-bottom-color: var(--color-primary-dark); }
         
-        #loginForm, #registerForm { display: none; } /* Hide both by default */
-        #loginForm.active, #registerForm.active { display: block; } /* Show only active one */
+        #loginForm, #registerForm { display: none; } 
+        #loginForm.active, #registerForm.active { display: block; } 
 
         #loginForm label, #registerForm label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
         #loginForm input, #registerForm input { width: 100%; padding: 0.75rem; border: 1px solid #d1fae5; border-radius: 0.5rem; box-sizing: border-box; margin-bottom: 1rem; }
         #loginForm button[type="submit"], #registerForm button[type="submit"] { background-color: var(--color-primary-dark); color: white; width: 100%; padding: 0.75rem; border: none; border-radius: 0.5rem; font-weight: 700; cursor: pointer; margin-top: 0.5rem; }
+        #loginForm button[type="submit"]:hover, #registerForm button[type="submit"]:hover { background-color: var(--color-primary); }
         
         /* Edit Product Modal Styles */
         #editProductModalContent { max-width: 600px; }
@@ -283,60 +371,92 @@
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 0.25rem; color: #059669; }
         .form-group input, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid #d1fae5; border-radius: 0.5rem; box-sizing: border-box; }
-        .submit-btn { width: 100%; background-color: #facc15; color: #064e3b; font-weight: 700; padding: 0.75rem; border-radius: 9999px; border: none; cursor: pointer; margin-top: 1.5rem; }
+        .submit-btn { width: 100%; background-color: #facc15; color: #064e3b; font-weight: 700; padding: 0.75rem; border-radius: 9999px; border: none; cursor: pointer; margin-top: 1.5rem; transition: background-color 0.15s, transform 0.15s; }
+        .submit-btn:hover { background-color: #eab308; transform: scale(1.02); }
         #myListingsContainer { display: grid; gap: 1.5rem; grid-template-columns: repeat(1, 1fr); margin-top: 2rem; }
         @media (min-width: 640px) { #myListingsContainer { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 1024px) { #myListingsContainer { grid-template-columns: repeat(3, 1fr); } } 
-        .listing-card { background-color: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border: 1px solid #d1fae5; display: flex; flex-direction: column; justify-content: space-between; }
+        .listing-card { background-color: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05); border: 1px solid #d1fae5; display: flex; flex-direction: column; justify-content: space-between; }
         .listing-card h4 { font-size: 1.125rem; font-weight: 700; color: #1f2937; margin-bottom: 0.5rem; }
         .listing-card .listing-details { margin-bottom: 1rem; } 
         .listing-card .listing-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: auto; } 
-        .delete-btn { background-color: var(--color-danger); color: white; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; }
-        .edit-btn { background-color: #2563eb; color: white; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; } 
-        .optimize-btn { background-color: #facc15; color: #064e3b; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; grid-column: 1 / -1; margin-top: 0.5rem; } 
-
+        .delete-btn { background-color: var(--color-danger); color: white; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; transition: background-color 0.15s; }
+        .delete-btn:hover { background-color: var(--color-danger-dark); }
+        .edit-btn { background-color: #2563eb; color: white; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; transition: background-color 0.15s; } 
+        .edit-btn:hover { background-color: #1d4ed8; }
+        .optimize-btn { background-color: #facc15; color: #064e3b; padding: 0.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; grid-column: 1 / -1; margin-top: 0.5rem; transition: background-color 0.15s; } 
+        .optimize-btn:hover { background-color: #eab308; }
 
         /* 10. Cart View */
-        #cartPage { padding: 4rem 1rem; min-height: 80vh; background-color: white; display: none; }
-        #cartPage h2 { font-size: 2.25rem; font-weight: 700; color: var(--color-text-dark); margin-bottom: 2rem; }
+        #cartPage { padding: 2rem 1rem; min-height: 80vh; background-color: white; display: none; }
+        @media (min-width: 768px) { #cartPage { padding: 4rem 1rem; } }
+        #cartPage h2 { font-size: 1.75rem; font-weight: 700; color: var(--color-text-dark); margin-bottom: 2rem; }
+        @media (min-width: 768px) { #cartPage h2 { font-size: 2.25rem; } }
         .cart-layout { display: flex; flex-direction: column; gap: 2rem; }
         @media (min-width: 1024px) { .cart-layout { flex-direction: row; align-items: flex-start; } .cart-summary { width: 350px; min-width: 300px; } }
         #cartItemsList { flex-grow: 1; }
-        .cart-item { display: grid; grid-template-columns: auto 1fr auto auto auto; align-items: center; border-bottom: 1px solid #e5e7eb; padding: 1rem 0; gap: 1rem; } 
+        
+        /* Responsive Cart Item */
+        .cart-item { display: grid; grid-template-columns: 60px 1fr 60px; grid-template-rows: auto auto; align-items: center; border-bottom: 1px solid #e5e7eb; padding: 1rem 0; gap: 0.5rem 1rem; } 
         .cart-item:last-child { border-bottom: none; }
-        .item-details { display: flex; align-items: center; gap: 1rem; }
+        .item-details { display: flex; align-items: center; gap: 1rem; grid-column: 1 / 2; grid-row: 1 / 3; }
         .item-details img { width: 60px; height: 60px; object-fit: cover; border-radius: 0.5rem; }
-        .item-name-unit { font-size: 1rem; font-weight: 600; }
-        .item-price { font-size: 1rem; font-weight: 500; }
-        .quantity-controls { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-        .quantity-btn { background: none; border: 1px solid #ccc; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 1.25rem; line-height: 1; padding: 0; }
+        .item-name-unit { font-size: 1rem; font-weight: 600; grid-column: 2 / 3; grid-row: 1 / 2; }
+        .item-price { font-size: 1rem; font-weight: 500; grid-column: 2 / 3; grid-row: 2 / 3; justify-self: start; }
+        .quantity-controls { display: flex; align-items: center; gap: 0.5rem; grid-column: 3 / 4; grid-row: 1 / 2; }
+        .quantity-btn { background: none; border: 1px solid #ccc; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 1.25rem; line-height: 1; padding: 0; transition: background-color 0.15s; }
+        .quantity-btn:hover { background-color: #f3f4f6; }
         .quantity-display { font-weight: 700; min-width: 20px; text-align: center; }
-        .remove-btn { background: none; border: none; color: var(--color-danger); cursor: pointer; font-size: 1.5rem; }
-        .cart-summary { background-color: #f9f9f9; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); width: 100%; }
+        .remove-btn { background: none; border: none; color: var(--color-danger); cursor: pointer; font-size: 1.5rem; grid-column: 3 / 4; grid-row: 2 / 3; }
+        
+        @media (min-width: 768px) {
+            .cart-item { 
+                grid-template-columns: auto 1fr auto auto auto; 
+                grid-template-rows: 1fr;
+                gap: 1rem;
+            }
+            .item-details { grid-column: auto; grid-row: auto; }
+            .item-name-unit { grid-column: auto; grid-row: auto; }
+            .item-price { grid-column: auto; grid-row: auto; justify-self: auto; }
+            .quantity-controls { grid-column: auto; grid-row: auto; }
+            .remove-btn { grid-column: auto; grid-row: auto; }
+        }
+
+        .cart-summary { background-color: #f9fafc; border: 1px solid #f3f4f6; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); width: 100%; }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px dashed #e5e7eb; font-size: 1rem; }
         .summary-row:last-of-type { border-bottom: none; margin-top: 1rem; padding-top: 1rem; font-size: 1.25rem; font-weight: 700; color: var(--color-primary-dark); }
-        .checkout-btn { width: 100%; padding: 1rem; background-color: var(--color-secondary); color: white; border: none; border-radius: 0.5rem; font-weight: 700; cursor: pointer; margin-top: 1rem; }
+        .checkout-btn { width: 100%; padding: 1rem; background-color: var(--color-secondary); color: white; border: none; border-radius: 0.5rem; font-weight: 700; cursor: pointer; margin-top: 1rem; transition: background-color 0.15s; }
+        .checkout-btn:hover { background-color: #7c3aed; }
         .empty-cart-message { text-align: center; padding: 3rem; background-color: #f0fff4; border-radius: 0.75rem; border: 1px dashed #d1fae5; color: #059669; font-size: 1.125rem; font-weight: 500; }
 
         /* 11. Orders Page (Customer) */
-        #ordersPage { padding: 4rem 1rem; min-height: 80vh; background-color: var(--color-background); display: none; }
-        #ordersPage h2 { font-size: 2.25rem; font-weight: 700; color: var(--color-text-dark); text-align: center; margin-bottom: 2rem; }
-        .orders-header { max-width: 900px; margin: 0 auto 2rem auto; display: flex; justify-content: space-between; align-items: center; }
-        .back-button { background: none; border: 1px solid #ccc; color: #4b5563; padding: 0.5rem 1rem; border-radius: 9999px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; }
+        #ordersPage { padding: 2rem 1rem; min-height: 80vh; background-color: var(--color-background); display: none; }
+        @media (min-width: 768px) { #ordersPage { padding: 4rem 1rem; } }
+        #ordersPage h2 { font-size: 1.75rem; font-weight: 700; color: var(--color-text-dark); text-align: center; margin-bottom: 2rem; }
+        @media (min-width: 768px) { #ordersPage h2 { font-size: 2.25rem; } }
+        
+        /* Responsive Orders Header */
+        .orders-header { max-width: 900px; margin: 0 auto 2rem auto; display: flex; flex-direction: column; justify-content: space-between; align-items: center; gap: 1rem; }
+        @media (min-width: 640px) { .orders-header { flex-direction: row; } }
+        .back-button { background: none; border: 1px solid #ccc; color: #4b5563; padding: 0.5rem 1rem; border-radius: 9999px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; transition: background-color 0.15s; }
+        .back-button:hover { background-color: #f3f4f6; }
         #ordersList { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
-        .order-card { background-color: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e5e7eb; }
-        .order-header-card { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #d1fae5; padding-bottom: 0.75rem; margin-bottom: 0.75rem; }
+        
+        .order-card { background-color: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05); border: 1px solid #e5e7eb; }
+        .order-header-card { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start; border-bottom: 1px solid #d1fae5; padding-bottom: 0.75rem; margin-bottom: 0.75rem; }
+        @media (min-width: 640px) { .order-header-card { flex-direction: row; justify-content: space-between; align-items: center; } }
         .order-id { font-size: 1rem; font-weight: 500; color: #6b7280; }
         .order-status { font-weight: 700; font-size: 1.125rem; } 
-        .order-status.processing { color: #f59e0b; } /* Yellow for processing */
-        .order-status.delivered { color: var(--color-primary-dark); } /* Green for delivered */
-        .order-status.cancelled { color: var(--color-danger); } /* Red for cancelled */
+        .order-status.processing { color: #f59e0b; }
+        .order-status.delivered { color: var(--color-primary-dark); }
+        .order-status.cancelled { color: var(--color-danger); } 
 
-        .order-details-summary { display: flex; justify-content: space-between; margin-top: 0.5rem; align-items: center; /* Align items vertically */ }
+        .order-details-summary { display: flex; flex-direction: column; gap: 0.25rem; margin-top: 0.5rem; align-items: flex-start; }
+        @media (min-width: 640px) { .order-details-summary { flex-direction: row; justify-content: space-between; align-items: center; } }
         .order-total { font-size: 1.25rem; font-weight: 800; color: #1f2937; }
         .order-delivery { font-size: 0.875rem; font-weight: 600; color: #4b5563; }
         .order-item-list { margin-top: 1rem; padding: 0.5rem 0; border-top: 1px dashed #f3f4f6; }
-        /* NEW: Cancel Order Button Style */
+        
         .cancel-order-btn {
             background-color: var(--color-danger);
             color: white;
@@ -348,23 +468,41 @@
             cursor: pointer;
             transition: background-color 0.15s;
         }
-        .cancel-order-btn:hover {
-            background-color: var(--color-danger-dark);
-        }
-        .order-card-footer {
-             margin-top: 1rem; 
-             padding-top: 1rem; 
-             border-top: 1px solid #e5e7eb; 
-             display: flex; 
-             justify-content: flex-end; 
-         }
+        .cancel-order-btn:hover { background-color: var(--color-danger-dark); }
+        .order-card-footer { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; }
 
         /* 12. CHAT BOT STYLES */
         #chatContainer { position: fixed; bottom: 20px; right: 20px; z-index: 100; }
         #chatToggleBtn { background-color: var(--color-secondary); color: white; border: none; width: 60px; height: 60px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); transition: transform 0.2s; display: flex; align-items: center; justify-content: center; }
         #chatToggleBtn:hover { transform: scale(1.1); }
-        #chatWindow { position: absolute; bottom: 80px; right: 0; width: 320px; height: 400px; background-color: white; border-radius: 0.75rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); display: flex; flex-direction: column; overflow: hidden; transform: translateY(100%); opacity: 0; transition: transform 0.3s ease-out, opacity 0.3s ease-out; pointer-events: none; }
-        #chatWindow.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+        #chatWindow { 
+            position: absolute; 
+            bottom: 80px; 
+            right: 0; 
+            width: 320px; 
+            height: 400px; 
+            background-color: white; 
+            border-radius: 0.75rem; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+            transform: scale(0.9) translateY(100%); /* Start scaled down */
+            opacity: 0; 
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out; 
+            pointer-events: none; 
+            transform-origin: bottom right;
+        }
+        #chatWindow.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: auto; }
+        /* Responsive Chat Window */
+        @media (max-width: 400px) {
+            #chatWindow {
+                width: calc(100vw - 2rem); /* Full width minus padding */
+                height: 70vh;
+                bottom: 80px;
+                right: -10px; /* Adjust to align with button */
+            }
+        }
         #chatHeader { background-color: var(--color-secondary); color: white; padding: 0.75rem 1rem; font-weight: 600; font-size: 1rem; display: flex; justify-content: space-between; align-items: center; }
         #chatMessages { flex-grow: 1; padding: 1rem; overflow-y: auto; background-color: #fcfcfc; }
         .chat-message { margin-bottom: 0.75rem; max-width: 85%; }
@@ -380,11 +518,14 @@
         .chat-spinner { border: 4px solid rgba(0, 0, 0, 0.1); border-left-color: #8b5cf6; border-radius: 50%; width: 16px; height: 16px; animation: spin 1s linear infinite; margin-right: 8px; }
 
         /* 13. NEW: Farmer Orders Page */
-        #farmerOrdersPage { padding: 4rem 1rem; min-height: 80vh; background-color: #f0fff4; display: none; }
-        #farmerOrdersPage h2 { font-size: 2.25rem; font-weight: 700; color: var(--color-primary-dark); text-align: center; margin-bottom: 2rem; }
+        #farmerOrdersPage { padding: 2rem 1rem; min-height: 80vh; background-color: #f0fff4; display: none; }
+        @media (min-width: 768px) { #farmerOrdersPage { padding: 4rem 1rem; } }
+        #farmerOrdersPage h2 { font-size: 1.75rem; font-weight: 700; color: var(--color-primary-dark); text-align: center; margin-bottom: 2rem; }
+        @media (min-width: 768px) { #farmerOrdersPage h2 { font-size: 2.25rem; } }
         #farmerOrdersList { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
-        .farmer-order-item-card { background-color: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e5e7eb; }
-        .farmer-order-item-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #d1fae5; padding-bottom: 0.75rem; margin-bottom: 1rem; }
+        .farmer-order-item-card { background-color: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05); border: 1px solid #e5e7eb; }
+        .farmer-order-item-header { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start; border-bottom: 1px solid #d1fae5; padding-bottom: 0.75rem; margin-bottom: 1rem; }
+        @media (min-width: 640px) { .farmer-order-item-header { flex-direction: row; justify-content: space-between; align-items: center; } }
         .farmer-order-item-header h4 { font-size: 1.25rem; font-weight: 700; color: #1f2937; margin: 0; }
         .farmer-order-item-details p { margin: 0.25rem 0; font-size: 1rem; }
 
@@ -404,7 +545,7 @@
     <section id="loginView" class="login-page">
         <div class="login-card">
             <h1>Welcome to KisanConnect</h1>
-            <p style="font-size: 1.25rem; color: #4b5563; margin-bottom: 2.5rem;">Select your role to proceed to the RaituBazar interface.</p>
+            <p style="font-size: 1.125rem; color: #4b5563; margin-bottom: 2.5rem;">Select your role to proceed to the RaituBazar interface.</p>
             
             <div class="role-grid">
                 
@@ -519,7 +660,7 @@
         <header>
             <nav class="container">
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span class="logo">KisanConnect</span>
+                    <a href="#" onclick="window.location.reload()" class="logo">KisanConnect</a>
                 </div>
                 
                 <div class="nav-info">
@@ -688,7 +829,7 @@
                             Back to Market
                         </button>
                         <h2 style="margin: 0;">🛒 Your Shopping Basket</h2>
-                        <span></span>
+                        <span></span> <!-- Spacer -->
                     </div>
 
                     <div class="cart-layout">
@@ -733,7 +874,7 @@
                             Back to Market
                         </button>
                         <h2 style="margin: 0;">📦 My Order History</h2>
-                        <span></span>
+                        <span></span> <!-- Spacer -->
                     </div>
                     <div id="ordersList">
                         <p style="text-align: center; color: #4b5563; padding: 3rem;" id="noOrdersMessage">
@@ -750,7 +891,7 @@
             <!-- NEW: Farmer Listings Page (Default) -->
             <div id="farmerListingsPage" style="display: block;">
                 <div class="container">
-                    <h2 style="font-size: 2.25rem; font-weight: 700; text-align: center; color: var(--color-primary-dark); padding-top: 2rem; margin-bottom: 1rem;">
+                    <h2 style="font-size: 2rem; font-weight: 700; text-align: center; color: var(--color-primary-dark); padding-top: 2rem; margin-bottom: 1rem;">
                         🧑‍🌾 Manage Your Farm Listings
                     </h2>
                     <p style="text-align: center; color: #4b5563; margin-bottom: 2rem;">Use this form to add a new product to the RaituBazar.</p>
@@ -816,7 +957,7 @@
                             Back to My Listings
                         </button>
                         <h2 style="margin: 0;">📦 Orders Received</h2>
-                        <span></span>
+                        <span></span> <!-- Spacer -->
                     </div>
                     <div id="farmerOrdersList">
                         <p style="text-align: center; color: #4b5563; padding: 3rem;" id="noFarmerOrdersMessage">
@@ -2055,6 +2196,7 @@
                 const html = cart.map((item, index) => {
                     const product = item.product;
                     const itemTotalPrice = (parseFloat(product.price) * item.quantity).toFixed(2);
+                    // This HTML is now controlled by the responsive CSS
                     return `
                         <div class="cart-item">
                             <div class="item-details">
@@ -2073,12 +2215,8 @@
                     `;
                 }).join('');
                 
-                cartItemsList.innerHTML = `
-                    <div class="cart-item" style="font-weight: 700; border-bottom: 2px solid var(--color-primary-dark); padding-bottom: 0.5rem; margin-bottom: 0.5rem; grid-template-columns: auto 1fr auto auto auto;">
-                        <p>Item</p><p>Product</p><p>Total Price</p><p>Quantity</p><p>Remove</p>
-                    </div>
-                    ${html}
-                `;
+                // Remove the desktop-only header row, as it breaks mobile
+                cartItemsList.innerHTML = html;
              }
              if(cartSubtotalDisplay) cartSubtotalDisplay.textContent = `₹${totals.subtotal.toFixed(2)}`;
              if(cartTaxDisplay) cartTaxDisplay.textContent = `₹${totals.tax.toFixed(2)}`;
@@ -2230,7 +2368,7 @@
                 if (apiKey === "" && isHostedEnvironment) {
                     console.log("[API] Using environment-provided API key.");
                     // The key is injected by the environment, proceed.
-                } else if (apiKey === "") {
+                } else if (apiKey === "" && !isHostedEnvironment) {
                     throw new Error("Gemini API key is not set.");
                 }
 
